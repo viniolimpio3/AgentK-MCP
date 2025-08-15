@@ -74,7 +74,7 @@ cp .env.example .env
 # - K8S_CA_PATH: Caminho para o certificado CA
 ```
 
-## � Execução
+## ⚙️ Execução
 
 1. Inicie o servidor MCP:
 ```bash
@@ -85,7 +85,7 @@ python app/main.py
 2. Em outro terminal, inicie o cliente Streamlit:
 ```bash
 cd client
-streamlit run app/main.py
+python -m streamlit run app/main.py
 ```
 
 3. Acesse a interface web através do navegador (geralmente em http://localhost:8501)
