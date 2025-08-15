@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fiware-orionld
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: orionld
+  template:
+    metadata:
+      name: fiware-orion
+      labels:
+        app: orionld
+    spec:
+      containers:
+      - name: orion
+        image: fiware/orion-ld
+        resources:
+          requests:
+            cpu: "100m" 
+            memory: "100Mi" 
+          limits:
+            cpu: "500m" 
+            memory: "500Mi" 
+        args: ["-dbhost", "orionld-mongodb-svc:27017","-rplSet","orionld-mongodb","-dbuser","usuariozão","-dbpwd","123456789","-dbAuthMech","SCRAM-SHA-256","-db","orion","-statCounters", "-statSemWait", "-statTiming", "-statNotifQueue"]
+        ports:
+        - containerPort: 1026
+        env:
+        - name: ORIONLD_MONGOCONLY
+          value: "TRUE"
+        livenessProbe:
+          httpGet:
+            path: /version
+            port: 1026
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /version
+            port: 1026
+          initialDelaySeconds: 5
+          periodSeconds: five
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fiware-orionld-service
+spec:
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 1027
+      targetPort: 1026
+  selector:
+    app: orionld
+
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: fiware-orionld-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: fiware-orionld
+  minReplicas: 3
+  maxReplicas: 15
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 30
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 70

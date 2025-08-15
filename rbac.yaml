@@ -1,0 +1,122 @@
+# ServiceAccount
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: agentk-svc
+  namespace: default
+---
+# ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: agentk-svc-role
+rules:
+# Recursos básicos (Core API Group)
+- apiGroups: [""]
+  resources: ["pods", "services", "configmaps", "secrets", "namespaces", "nodes", "persistentvolumes", "persistentvolumeclaims", "serviceaccounts", "endpoints", "events"]
+  verbs: ["get", "list", "create", "update", "delete", "patch", "watch"]
+
+# Apps (Deployments, StatefulSets, etc.)
+- apiGroups: ["apps"]
+  resources: ["deployments", "replicasets", "daemonsets", "statefulsets"]
+  verbs: ["get", "list", "create", "update", "delete", "patch", "watch"]
+
+# Extensions (recursos legados)
+- apiGroups: ["extensions"]
+  resources: ["deployments", "replicasets", "daemonsets", "ingresses"]
+  verbs: ["get", "list", "create", "update", "delete", "patch", "watch"]
+
+# Networking
+- apiGroups: ["networking.k8s.io"]
+  resources: ["ingresses", "networkpolicies", "ingressclasses"]
+  verbs: ["get", "list", "create", "update", "delete", "patch", "watch"]
+
+# RBAC
+- apiGroups: ["rbac.authorization.k8s.io"]
+  resources: ["roles", "rolebindings", "clusterroles", "clusterrolebindings"]
+  verbs: ["get", "list", "create", "update", "delete", "patch", "watch"]
+
+# Batch (Jobs e CronJobs)
+- apiGroups: ["batch"]
+  resources: ["jobs", "cronjobs"]
+  verbs: ["get", "list", "create", "update", "delete", "patch", "watch"]
+
+# Autoscaling
+- apiGroups: ["autoscaling"]
+  resources: ["horizontalpodautoscalers"]
+  verbs: ["get", "list", "create", "update", "delete", "patch", "watch"]
+
+# Storage
+- apiGroups: ["storage.k8s.io"]
+  resources: ["storageclasses", "volumeattachments", "csinodes", "csidrivers"]
+  verbs: ["get", "list", "create", "update", "delete", "patch", "watch"]
+
+# Policy
+- apiGroups: ["policy"]
+  resources: ["poddisruptionbudgets", "podsecuritypolicies"]
+  verbs: ["get", "list", "create", "update", "delete", "patch", "watch"]
+
+# API Registration
+- apiGroups: ["apiregistration.k8s.io"]
+  resources: ["apiservices"]
+  verbs: ["get", "list", "create", "update", "delete", "patch", "watch"]
+
+# Certificates
+- apiGroups: ["certificates.k8s.io"]
+  resources: ["certificatesigningrequests"]
+  verbs: ["get", "list", "create", "update", "delete", "patch", "watch"]
+
+# Coordination (para leader election)
+- apiGroups: ["coordination.k8s.io"]
+  resources: ["leases"]
+  verbs: ["get", "list", "create", "update", "delete", "patch", "watch"]
+
+# Node
+- apiGroups: ["node.k8s.io"]
+  resources: ["runtimeclasses"]
+  verbs: ["get", "list", "create", "update", "delete", "patch", "watch"]
+
+# Discovery
+- apiGroups: ["discovery.k8s.io"]
+  resources: ["endpointslices"]
+  verbs: ["get", "list", "create", "update", "delete", "patch", "watch"]
+
+# Events (API separada em versões mais novas)
+- apiGroups: ["events.k8s.io"]
+  resources: ["events"]
+  verbs: ["get", "list", "create", "update", "delete", "patch", "watch"]
+
+# Admission Registration (webhooks)
+- apiGroups: ["admissionregistration.k8s.io"]
+  resources: ["validatingadmissionwebhooks", "mutatingadmissionwebhooks"]
+  verbs: ["get", "list", "create", "update", "delete", "patch", "watch"]
+
+# Scheduling
+- apiGroups: ["scheduling.k8s.io"]
+  resources: ["priorityclasses"]
+  verbs: ["get", "list", "create", "update", "delete", "patch", "watch"]
+
+# Metrics (se usando metrics-server)
+- apiGroups: ["metrics.k8s.io"]
+  resources: ["nodes", "pods"]
+  verbs: ["get", "list"]
+
+# Custom Resource Definitions
+- apiGroups: ["apiextensions.k8s.io"]
+  resources: ["customresourcedefinitions"]
+  verbs: ["get", "list", "create", "update", "delete", "patch", "watch"]
+
+---
+# ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: agentk-binding
+subjects:
+- kind: ServiceAccount
+  name: agentk-svc
+  namespace: default
+roleRef:
+  kind: ClusterRole
+  name: agentk-svc-role
+  apiGroup: rbac.authorization.k8s.io
