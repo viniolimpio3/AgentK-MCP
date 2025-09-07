@@ -22,9 +22,11 @@ def format_pods_json(k8s_data):
 def valid_object_type(object_type: str) -> bool:
     return object_type in ['pods', 'nodes', 'services', 'deployments', 'replicasets', 'namespaces', 'cronjobs']
 
-def get_objects(object_type: str):
+def get_objects(object_type: str, namespace: str = "default"):
     """
-        Lista um determinado objeto do cluster Kubernetes. (Ex. pods, replicasets, services..) 
+        Lista um determinado objeto do cluster Kubernetes. 
+        Valores aceitos: ['pods', 'nodes', 'services', 'deployments', 'replicasets', 'namespaces', 'cronjobs']
+        Para 'replicasets' e 'cronjobs', o namespace é obrigatório.
     """
     try:
         if not valid_object_type(object_type):
@@ -32,6 +34,12 @@ def get_objects(object_type: str):
         
         url = f"{getEnv('K8S_BASE_URL')}/api/v1/{object_type}?limit=500"
 
+        if object_type in ['deployments', 'replicasets']:
+            url = f"{getEnv('K8S_BASE_URL')}/apis/apps/v1/namespaces/{namespace}/{object_type}?limit=500"
+
+        if object_type == 'cronjobs':
+            url = f"{getEnv('K8S_BASE_URL')}/apis/batch/v1/namespaces/{namespace}/{object_type}?limit=500"
+        
         # Make a GET request to the API
         headers = {
             'Accept': 'application/json;as=Table;v=v1;g=meta.k8s.io,application/json;as=Table;v=v1beta1;g=meta.k8s.io,application/json',

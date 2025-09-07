@@ -76,11 +76,11 @@ cp .env.example .env
 
 ## ⚙️ Execução
 
-1. Inicie o servidor MCP:
+<!-- 1. Inicie o servidor MCP:
 ```bash
 cd server
 python app/main.py
-```
+``` -->
 
 2. Em outro terminal, inicie o cliente Streamlit:
 ```bash
