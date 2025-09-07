@@ -21,7 +21,6 @@ initialize_services()
 # Configura serviço de chat
 chat_service = ChatService(st.session_state.llm_client)
 
-
 # Carrega e aplica os estilos CSS
 st.markdown(settings.load_css("main.css"), unsafe_allow_html=True)
 
@@ -33,21 +32,7 @@ sidebar.render()
 st.markdown('<div class="main-content">', unsafe_allow_html=True)
 
 # Renderiza histórico do chat
-for message in st.session_state.llm_client.history:
-    if message["role"] != "tool":
-        with st.chat_message(message["role"]):
-            st.markdown(message["content"])
-
-        if message["role"] == 'assistant' and "tool_calls" in message and message["tool_calls"]:
-            for call in message["tool_calls"]:
-                with st.chat_message(name="tool", avatar=":material/build:"):
-                    st.markdown(f'LLM chamando tool {call.function.name}')
-                    with st.expander("Visualizar resultado"):
-                        st.code(call.function.arguments)
-    else:
-        with st.chat_message(name="tool", avatar=":material/data_object:"):
-            with st.expander("Visualizar resposta"):
-                st.code(message["content"])
+chat_service.render_chat_history()
 
 # Input do usuário
 prompt = chat_service.chat_interface.get_user_input()

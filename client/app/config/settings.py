@@ -8,13 +8,6 @@ from pathlib import Path
 ROOT_DIR = Path(__file__).parent.parent.parent.parent.resolve()
 TOOL_PATH = str(ROOT_DIR / "server" / "app" / "main.py")
 
-# Server path validation logging
-print("\n=== MCP Server Configuration ===")
-print(f"Root directory: {ROOT_DIR}")
-print(f"Server path: {TOOL_PATH}")
-print(f"Server file exists: {os.path.exists(TOOL_PATH)}")
-print("==============================\n")
-
 def load_css(css_file_name: str) -> str:
     """
     Carrega o conteúdo de um arquivo CSS da pasta styles.
@@ -32,7 +25,7 @@ def load_css(css_file_name: str) -> str:
 # LLM Settings
 DEFAULT_MODEL = "gpt-4"
 SYSTEM_INSTRUCTIONS = (
-    "Você é um agente especialista em Kubernetes. "
+    "Seu nome é AgentK, e você é especialista em Kubernetes. "
     "Seu papel é ajudar o usuário a entender, analisar e manipular configurações do Kubernetes. "
     "Você está conectado ao servidor MCP e pode obter arquivos de configuração do Kubernetes conforme solicitado. "
     "Utilize as ferramentas disponíveis para buscar, analisar e explicar recursos do Kubernetes."
