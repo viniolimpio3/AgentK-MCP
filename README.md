@@ -44,14 +44,6 @@ AgentK é um assistente inteligente especializado em **análise, otimização e 
 - **6 MCP Tools** para operações CRUD completas
 - **Configuração Externa** (`resource_config.yaml`)
 
-### **MCP Tools**
-1. **`listar_nomes_recursos_k8s`** - Lista recursos por tipo
-2. **`extrair_yamls_recursos_k8s`** - Extrai YAMLs completos por tipo de recurso
-3. **`obter_yaml_objeto_especifico`** - YAML de recurso específico
-4. **`implementar_yaml_no_cluster`** - Aplica YAMLs (create/update)
-5. **`validar_yaml_k8s_dry_run`** - Validação client-side da estrutura yaml básica
-6. **`deletar_recurso_k8s`** - Remove recursos individuais
-
 ## ⚙️ Instalação Rápida
 
 ```bash
@@ -65,7 +57,26 @@ export OPENAI_API_KEY="sua-chave-openai-aqui"
 
 # 3. Execute (certifique-se que kubectl está configurado)
 cd client
-python -m streamlit run app/main.py
+streamlit run app/main.py
+```
+
+## 💡 Exemplos de Uso
+
+**Análise e Extração**:
+```
+👤 "Liste todos os deployments do namespace production"
+👤 "Extraia o YAML do deployment nginx-app e sugira melhorias"
+```
+
+**Validação e Aplicação**:
+```
+👤 "Valide esta configuração antes de aplicar"
+👤 "Aplique no cluster se estiver tudo OK"
+```
+
+**Limpeza**:
+```
+👤 "Delete o pod nginx-test do namespace development"
 ```
 
 ## ✅ Principais Diferenciais
@@ -78,9 +89,9 @@ python -m streamlit run app/main.py
 
 ## 🏗️ Arquitetura
 
-<p align="center">
-  <img src="docs/agentk-arch.png" alt="AgentK" width="600" />
-</p>
+```
+Cliente Streamlit + GPT-4  ◄──MCP──►  Servidor FastMCP + K8s Tools
+```
 
 ## 📞 Contato
 
