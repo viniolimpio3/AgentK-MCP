@@ -7,7 +7,8 @@ class LLmClient:
     def __init__(self, model: str):
         self.model = model
         self.history: list[ChatCompletionMessageParam] = []
-        
+        self.client = openai.Client()
+
     async def __aenter__(self):
         return self
         
@@ -26,7 +27,7 @@ class LLmClient:
         self.history.append(message)
         
     def complete_chat(self, tools = []) -> ChatCompletion:
-        return openai.chat.completions.create(
+        return self.client.chat.completions.create(
             model=self.model,
             messages=self.history,
             tools=tools,

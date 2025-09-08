@@ -4,7 +4,6 @@ import streamlit as st
 from dotenv import load_dotenv
 
 from app.config import settings
-from app.classes.mcp_handler import MCPHandler
 from app.classes.llm_client import LLmClient
 from app.utils.async_utils import run_task
 from app.classes.mcp_client import McpClient
