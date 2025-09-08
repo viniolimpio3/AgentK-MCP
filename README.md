@@ -60,25 +60,6 @@ cd client
 streamlit run app/main.py
 ```
 
-## 💡 Exemplos de Uso
-
-**Análise e Extração**:
-```
-👤 "Liste todos os deployments do namespace production"
-👤 "Extraia o YAML do deployment nginx-app e sugira melhorias"
-```
-
-**Validação e Aplicação**:
-```
-👤 "Valide esta configuração antes de aplicar"
-👤 "Aplique no cluster se estiver tudo OK"
-```
-
-**Limpeza**:
-```
-👤 "Delete o pod nginx-test do namespace development"
-```
-
 ## ✅ Principais Diferenciais
 
 - **Prevenção de Conflitos**: Elimina erro 409 com verificação automática
@@ -89,9 +70,9 @@ streamlit run app/main.py
 
 ## 🏗️ Arquitetura
 
-```
-Cliente Streamlit + GPT-4  ◄──MCP──►  Servidor FastMCP + K8s Tools
-```
+<p align="center">
+  <img src="docs/agent-k-arch.png" alt="AgentK" width="500" />
+</p>
 
 ## 📞 Contato
 
