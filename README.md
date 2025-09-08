@@ -1,122 +1,92 @@
-# 🛡️ AgentK - Kubernetes Management Assistant
+# 🛡️ AgentK - Especialista em Configurações YAML Kubernetes
 
-AgentK é um assistente inteligente para gerenciamento de clusters Kubernetes que utiliza GPT-4 e MCP (Model Context Protocol) para interagir com seu cluster de forma conversacional.
+AgentK é um assistente inteligente especializado em **análise, otimização e gestão de configurações YAML do Kubernetes**. Utilizando GPT-4 e MCP (Model Context Protocol), oferece orientações baseadas em boas práticas para criação e manutenção de recursos Kubernetes de qualidade profissional.
 
-## 🌟 Recursos Principais
+## 🎯 Objetivo Principal
 
-1. **Interface Conversacional**: Interface amigável baseada em chat para interagir com seu cluster Kubernetes
-2. **Integração com GPT-4**: Utiliza GPT-4 para entender comandos em linguagem natural
-3. **MCP (Model Context Protocol)**: Comunicação bidirecional eficiente entre o cliente e o servidor
-4. **Monitoramento de Recursos**: Capacidade de listar e analisar diferentes recursos do Kubernetes
+**AgentK é seu consultor especializado em YAML Kubernetes**, focado em:
+- ✅ **Extrair e analisar** configurações existentes do cluster
+- ✅ **Sugerir melhorias** baseadas em boas práticas de produção
+- ✅ **Validar configurações** antes da aplicação (dry-run)
+- ✅ **Implementar recursos** com verificação automática de conflitos
+- ✅ **Orientar na criação** de YAMLs seguindo padrões de qualidade
 
-## 🎯 Funcionalidades
+> **Importante**: AgentK **não é uma ferramenta de monitoramento**, mas sim um especialista em configurações YAML e aplicação de boas práticas.
 
-- 🔍 **Listagem de Recursos**: Lista pods, nodes, services, deployments e outros recursos
-- 📝 **Detalhes de Objetos**: Obtém informações detalhadas sobre objetos específicos
-- 🤖 **Interface Intuitiva**: Comunicação natural através do Streamlit
-- 🔐 **Segurança**: Suporte a certificados e autenticação do Kubernetes
+## 🌟 Capacidades Principais
 
-## 📸 AgentK
+### 📋 **Gestão Completa de Recursos (CRUD)**
+- **Listar** recursos do cluster por tipo
+- **Extrair** configurações YAML de recursos existentes  
+- **Obter** YAML específico por nome e namespace
+- **Implementar** recursos (create/update automático com prevenção de conflitos)
+- **Deletar** recursos individuais do cluster
+- **Validar** YAMLs com dry-run antes da aplicação
+
+### 🎯 **Foco em Boas Práticas**
+- **Labels e annotations consistentes**
+- **Resource limits e requests adequados**
+- **Configurações de segurança apropriadas** 
+- **Estrutura YAML limpa e legível**
+
+### 🔧 **Recursos Suportados**
+**Namespaced**: pods, services, deployments, configmaps, secrets, ingresses, pvcs, replicasets, statefulsets, cronjobs, jobs  
+**Cluster-wide**: nodes, persistent_volumes, namespaces
 
 <p align="center">
-  <img src="docs/AgentK-color.png" alt="AgentK" width="500" />
+  <img src="docs/AgentK-color.png" alt="AgentK" width="200" />
 </p>
 
-## 🚀 Tecnologias Utilizadas
+## 🚀 Tecnologias
 
-### Servidor (MCP)
-- Python 3.10+
-- MCP (Model Context Protocol)
-- Requests
-- Python-dotenv
-- Logging
+- **FastMCP** + **Kubernetes Python Client** (Servidor)
+- **Streamlit** + **GPT-4** (Cliente)
+- **6 MCP Tools** para operações CRUD completas
+- **Configuração Externa** (`resource_config.yaml`)
 
-### Cliente
-- Python 3.10+
-- Streamlit
-- OpenAI GPT-4
-- MCP Client
-- AsyncIO
+### **MCP Tools**
+1. **`listar_nomes_recursos_k8s`** - Lista recursos por tipo
+2. **`extrair_yamls_recursos_k8s`** - Extrai YAMLs completos por tipo de recurso
+3. **`obter_yaml_objeto_especifico`** - YAML de recurso específico
+4. **`implementar_yaml_no_cluster`** - Aplica YAMLs (create/update)
+5. **`validar_yaml_k8s_dry_run`** - Validação client-side da estrutura yaml básica
+6. **`deletar_recurso_k8s`** - Remove recursos individuais
 
----
+## ⚙️ Instalação Rápida
 
-## 📦 Requisitos
-
-- Python 3.10 ou superior
-- Cluster Kubernetes configurado (local ou remoto)
-- Certificados de acesso ao cluster
-- pip (gerenciador de pacotes do Python)
-- Chave de API OpenAI
-
-## ⚙️ Instalação e Configuração
-
-1. Clone o repositório:
 ```bash
-git clone https://github.com/seu-usuario/AgentK-MCP.git
+# 1. Clone e instale
+git clone https://github.com/viniolimpio3/AgentK-MCP.git
 cd AgentK-MCP
-```
-
-2. Instale as dependências:
-```bash
 pip install -r requirements.txt
-```
 
-3. Configure as variáveis de ambiente:
-```bash
-# No diretório server/
-cp .env.example .env
+# 2. Configure OpenAI
+export OPENAI_API_KEY="sua-chave-openai-aqui"
 
-# Configure as seguintes variáveis:
-# - GPT_API_KEY_OPENAI: Sua chave da API OpenAI
-# - K8S_BASE_URL: URL do seu cluster Kubernetes
-# - K8S_CERT_PATH: Caminho para o certificado do cliente
-# - K8S_KEY_CERT_PATH: Caminho para a chave do cliente
-# - K8S_CA_PATH: Caminho para o certificado CA
-```
-
-## ⚙️ Execução
-
-<!-- 1. Inicie o servidor MCP:
-```bash
-cd server
-python app/main.py
-``` -->
-
-2. Em outro terminal, inicie o cliente Streamlit:
-```bash
+# 3. Execute (certifique-se que kubectl está configurado)
 cd client
 python -m streamlit run app/main.py
 ```
 
-3. Acesse a interface web através do navegador (geralmente em http://localhost:8501)
+## ✅ Principais Diferenciais
 
-## 💡 Uso
+- **Prevenção de Conflitos**: Elimina erro 409 com verificação automática
+- **Boas Práticas Integradas**: Sugestões de melhorias automáticas
+- **Dry-run Integrado**: Validação prévia obrigatória
+- **Interface Conversacional**: Interação natural via chat
+- **Flexibilidade**: Configuração externa editável
 
-O AgentK oferece uma interface conversacional onde você pode:
+## 🏗️ Arquitetura
 
-1. **Listar recursos do cluster**:
-   - Pods
-   - Nodes
-   - Services
-   - Deployments
-   - ReplicaSets
-   - Namespaces
-   - CronJobs
+<p align="center">
+  <img src="docs/agentk-arch.png" alt="AgentK" width="600" />
+</p>
 
-2. **Obter detalhes específicos**:
-   - Informações detalhadas de recursos
-   - Status dos pods
-   - Configurações dos serviços
+## 📞 Contato
 
-3. **Interagir naturalmente**:
-   - Faça perguntas em linguagem natural
-   - Receba respostas formatadas e contextualizadas
-   - Analise problemas e receba sugestões
+- **GitHub**: [viniolimpio3/AgentK-MCP](https://github.com/viniolimpio3/AgentK-MCP)
+- **Issues**: Reporte bugs e solicite features
 
-## 🔐 Segurança
+---
 
-O AgentK utiliza:
-- Certificados TLS para comunicação com o cluster
-- Autenticação via certificados do cliente
-- Variáveis de ambiente para configurações sensíveis
-- Logs para auditoria de operações
+**AgentK** - Seu especialista em configurações YAML Kubernetes 🛡️
