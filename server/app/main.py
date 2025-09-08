@@ -20,7 +20,6 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
-
 try:
     mcp = FastMCP("AgentK-Server", dependencies=["requests", "python-dotenv"])
 
@@ -34,21 +33,7 @@ try:
 
         Args:
             resources (list): Array de tipos de recursos Kubernetes a serem listados. 
-                            Valores aceitos EXATAMENTE:
-                            - 'pods'
-                            - 'services' 
-                            - 'deployments'
-                            - 'configmaps'
-                            - 'secrets'
-                            - 'ingresses'
-                            - 'persistent_volume_claims'
-                            - 'replicasets'
-                            - 'statefulsets'
-                            - 'nodes'
-                            - 'persistent_volumes'
-                            - 'namespaces'
-                            - 'cronjobs'
-                            - 'jobs'
+                            Valores aceitos EXATAMENTE: ['pods', 'services', 'deployments', 'configmaps', 'secrets', 'ingresses', 'persistent_volume_claims', 'replicasets', 'statefulsets', 'nodes', 'persistent_volumes', 'namespaces', 'cronjobs', 'jobs']
 
         Returns:
             dict: Dicionário com estrutura:
@@ -86,21 +71,7 @@ try:
         
         Args:
             resources (list): Array de tipos de recursos a serem exportados.
-                            Valores aceitos EXATAMENTE:
-                            - 'pods'
-                            - 'services' 
-                            - 'deployments'
-                            - 'configmaps'
-                            - 'secrets'
-                            - 'ingresses'
-                            - 'persistent_volume_claims'
-                            - 'replicasets'
-                            - 'statefulsets'
-                            - 'nodes'
-                            - 'persistent_volumes'
-                            - 'namespaces'
-                            - 'cronjobs'
-                            - 'jobs'
+                            Valores aceitos EXATAMENTE: ['pods', 'services', 'deployments', 'configmaps', 'secrets', 'ingresses', 'persistent_volume_claims', 'replicasets', 'statefulsets', 'nodes', 'persistent_volumes', 'namespaces', 'cronjobs', 'jobs']
         
         Returns:
             dict: Objeto de resposta contendo:
@@ -162,21 +133,7 @@ try:
 
         Args:
             resource_type (str): Tipo do recurso Kubernetes. 
-                               Valores aceitos EXATAMENTE:
-                               - 'pods'
-                               - 'services' 
-                               - 'deployments'
-                               - 'configmaps'
-                               - 'secrets'
-                               - 'ingresses'
-                               - 'persistent_volume_claims'
-                               - 'replicasets'
-                               - 'statefulsets'
-                               - 'nodes'
-                               - 'persistent_volumes'
-                               - 'namespaces'
-                               - 'cronjobs'
-                               - 'jobs'
+                               Valores aceitos EXATAMENTE: ['pods', 'services', 'deployments', 'configmaps', 'secrets', 'ingresses', 'persistent_volume_claims', 'replicasets', 'statefulsets', 'nodes', 'persistent_volumes', 'namespaces', 'cronjobs', 'jobs']
             name (str): Nome exato do recurso no cluster
             namespace (str, optional): Namespace do recurso. Padrão é 'default'. 
                                      Não aplicável para recursos cluster-wide como 'nodes', 'persistent_volumes' e 'namespaces'
@@ -212,7 +169,7 @@ try:
             }
 
     @mcp.tool()
-    def implementar_yaml_no_cluster(yaml_content: str, namespace: str = 'default') -> dict:
+    def implementar_yaml_no_cluster(yaml_content: str, namespace: str = 'default', skip_dry_run: bool = False) -> dict:
         """
         Implementa um recurso Kubernetes no cluster a partir de um conteúdo YAML fornecido.
 
@@ -220,11 +177,11 @@ try:
         definições em formato YAML. Suporta múltiplos recursos separados por '---'.
 
         Args:
-            yaml_content (str): Conteúdo YAML do recurso a ser implementado. Pode conter
-                              múltiplos recursos separados por '---'.
+            yaml_content (str): Conteúdo YAML do recurso a ser implementado. Pode conter múltiplos recursos separados por '---'.
             namespace (str, optional): Namespace onde recursos namespacados serão criados. 
-                                     Padrão é 'default'. Não aplicável para recursos 
-                                     cluster-wide como 'nodes', 'persistent_volumes' e 'namespaces'.
+                Padrão é 'default'. Não aplicável para recursos cluster-wide como 'nodes', 'persistent_volumes' e 'namespaces'.
+            skip_dry_run (bool, optional): Se True, pula a validação client dry-run prévia.
+                Padrão é False.
 
         Returns:
             dict: Dicionário contendo:
@@ -241,7 +198,7 @@ try:
         try:
             applier = K8sApplier()
             
-            result = applier.apply_yaml_content(yaml_content, namespace)
+            result = applier.apply_yaml_content(yaml_content, namespace, skip_dry_run=skip_dry_run)
             
             # Padronizar formato de resposta
             response = {
@@ -271,9 +228,9 @@ try:
             }
 
     @mcp.tool()
-    def validar_yaml_k8s(yaml_content: str, namespace: str = 'default') -> dict:
+    def validar_yaml_k8s_dry_run(yaml_content: str, namespace: str = 'default') -> dict:
         """
-        Valida um conteúdo YAML sem aplicá-lo ao cluster (dry-run).
+        Validação básica do conteúdo YAML sem aplicá-lo ao cluster (client dry-run).
 
         Esta função permite validar a sintaxe e estrutura de recursos Kubernetes
         antes de aplicá-los efetivamente ao cluster.
@@ -300,6 +257,41 @@ try:
             
         except Exception as e:
             error_msg = f"Erro na validação: {str(e)}"
+            return {
+                "success": False,
+                "error": error_msg
+            }
+
+    @mcp.tool()
+    def deletar_recurso_k8s(resource_type: str, name: str, namespace: str = 'default') -> dict:
+        """
+        Remove um recurso específico do cluster Kubernetes.
+
+        Esta função permite deletar um recurso individual do cluster por tipo, nome e namespace.
+        CUIDADO: Esta operação é irreversível.
+
+        Args:
+            resource_type (str): Tipo do recurso Kubernetes.
+                Valores aceitos EXATAMENTE: ['pods', 'services', 'deployments', 'configmaps', 'secrets', 'ingresses', 'persistent_volume_claims', 'replicasets', 'statefulsets', 'nodes', 'persistent_volumes', 'namespaces', 'cronjobs', 'jobs']
+            name (str): Nome exato do recurso no cluster
+            namespace (str, optional): Namespace do recurso. Padrão é 'default'.
+                Não aplicável para recursos cluster-wide como 'nodes', 'persistent_volumes' e 'namespaces'
+
+        Returns:
+            dict: Dicionário contendo:
+                - success (bool): Status da operação
+                - message (str): Mensagem informativa sobre o resultado
+                - deleted_resource (dict): Informações do recurso deletado se sucesso
+                - error (str): Mensagem de erro caso falhe
+        """
+        try:
+            applier = K8sApplier()
+            result = applier.delete_resource(resource_type, name, namespace)
+            return result
+            return result
+            
+        except Exception as e:
+            error_msg = f"Erro ao deletar recurso: {str(e)}"
             return {
                 "success": False,
                 "error": error_msg

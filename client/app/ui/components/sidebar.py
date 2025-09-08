@@ -31,7 +31,7 @@ class Sidebar:
             st.markdown("---")
             # Informações do modelo
             st.markdown("### Configurações")
-            st.markdown(f"**Modelo:** o4-mini")
+            st.markdown(f"**Modelo:** gpt-4.1")
             st.markdown(f"**Versão:** latest")
             
             # Contador de mensagens

@@ -15,22 +15,6 @@ class ChatService:
     def __init__(self, llm_client: LLmClient):
         self.llm_client = llm_client
         self.chat_interface = ChatInterface()
-    
-    # def render_chat_history(self) -> None:
-    #     """Render the complete chat history."""
-    #     for message in self.llm_client.history:
-    #         if message["role"] == "tool":
-    #             self.chat_interface.render_tool_response(message["content"])
-    #             continue
-                
-    #         self.chat_interface.render_message(message["role"], message["content"])
-            
-    #         if message.get("tool_calls"):
-    #             for call in message["tool_calls"]:
-    #                 self.chat_interface.render_tool_call(
-    #                     call.function.name,
-    #                     call.function.arguments
-    #                 )
 
     def process_single_tool_call(self, call) -> None:
         try:
