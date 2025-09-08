@@ -1,0 +1,93 @@
+# Configuração de recursos Kubernetes
+ignored_namespaces:
+  - kube-system
+  - kube-public
+  - kube-node-lease
+
+resources:
+  pods:
+    api: v1
+    kind: Pod
+    list_method: list_pod_for_all_namespaces
+    get_method: read_namespaced_pod
+    
+  services:
+    api: v1
+    kind: Service
+    list_method: list_service_for_all_namespaces
+    get_method: read_namespaced_service
+    
+  deployments:
+    api: apps/v1
+    kind: Deployment
+    list_method: list_deployment_for_all_namespaces
+    get_method: read_namespaced_deployment
+    
+  configmaps:
+    api: v1
+    kind: ConfigMap
+    list_method: list_config_map_for_all_namespaces
+    get_method: read_namespaced_config_map
+    
+  secrets:
+    api: v1
+    kind: Secret
+    list_method: list_secret_for_all_namespaces
+    get_method: read_namespaced_secret
+    
+  ingresses:
+    api: networking.k8s.io/v1
+    kind: Ingress
+    list_method: list_ingress_for_all_namespaces
+    get_method: read_namespaced_ingress
+    
+  persistent_volume_claims:
+    api: v1
+    kind: PersistentVolumeClaim
+    list_method: list_persistent_volume_claim_for_all_namespaces
+    get_method: read_namespaced_persistent_volume_claim
+    
+  replicasets:
+    api: apps/v1
+    kind: ReplicaSet
+    list_method: list_replica_set_for_all_namespaces
+    get_method: read_namespaced_replica_set
+    
+  statefulsets:
+    api: apps/v1
+    kind: StatefulSet
+    list_method: list_stateful_set_for_all_namespaces
+    get_method: read_namespaced_stateful_set
+    
+  nodes:
+    api: v1
+    kind: Node
+    list_method: list_node
+    get_method: read_node
+    cluster_wide: true
+    
+  persistent_volumes:
+    api: v1
+    kind: PersistentVolume
+    list_method: list_persistent_volume
+    get_method: read_persistent_volume
+    cluster_wide: true
+    
+  namespaces:
+    api: v1
+    kind: Namespace
+    list_method: list_namespace
+    get_method: read_namespace
+    cluster_wide: true
+    
+  cronjobs:
+    api: batch/v1
+    kind: CronJob
+    list_method: list_cron_job_for_all_namespaces
+    get_method: read_namespaced_cron_job
+    
+  jobs:
+    api: batch/v1
+    kind: Job
+    list_method: list_job_for_all_namespaces
+    get_method: read_namespaced_job
