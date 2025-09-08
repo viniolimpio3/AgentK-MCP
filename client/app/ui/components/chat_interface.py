@@ -46,14 +46,15 @@ class ChatInterface:
                 st.code(content)
     
     @staticmethod
-    def get_user_input(placeholder: str = "Digite sua pergunta...") -> Optional[str]:
+    def get_user_input(placeholder: str = "Digite sua pergunta...", disabled: bool = False) -> Optional[str]:
         """
         Obtém entrada do usuário.
         
         Args:
             placeholder: Texto placeholder para o input
+            disabled: Se True, o input ficará desabilitado
             
         Returns:
             Texto digitado pelo usuário ou None
         """
-        return st.chat_input(placeholder)
+        return st.chat_input(placeholder, disabled=disabled)

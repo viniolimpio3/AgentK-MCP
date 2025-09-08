@@ -31,19 +31,25 @@ sidebar.render()
 # Container principal para o chat
 st.markdown('<div class="main-content">', unsafe_allow_html=True)
 
+# Inicializa o estado de processamento se não existir
+if 'is_processing' not in st.session_state:
+    st.session_state.is_processing = False
+
 # Renderiza histórico do chat
 chat_service.render_chat_history()
 
-# Input do usuário
-prompt = chat_service.chat_interface.get_user_input()
+# Input do usuário (desabilitado durante o processamento)
+prompt = chat_service.chat_interface.get_user_input(disabled=st.session_state.is_processing)
 
 if prompt:
+    st.session_state.is_processing = True
     st.session_state.llm_client.add_user_message(prompt)
     chat_service.chat_interface.render_message("user", prompt, avatar=":material/person:")
     with st.container():
         with st.spinner("Processando sua pergunta..."):
             response = st.session_state.llm_client.complete_chat(st.session_state.tools)
             chat_service.resolve_chat(response)
+    st.session_state.is_processing = False
 
 # Fecha o container principal
 st.markdown('</div>', unsafe_allow_html=True)
