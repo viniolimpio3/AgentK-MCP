@@ -27,6 +27,7 @@ class K8sExtractor:
         self.apps_v1 = client.AppsV1Api()
         self.networking_v1 = client.NetworkingV1Api()
         self.batch_v1 = client.BatchV1Api()
+        self.auto_scaling_v1 = client.AutoscalingV1Api()
 
     def _load_config(self, config_path: str = None):
         """Carrega configuração de recursos"""
@@ -63,6 +64,8 @@ class K8sExtractor:
             return self.networking_v1
         elif api.startswith('batch/'):
             return self.batch_v1
+        elif api.startswith('autoscaling/'):
+            return self.auto_scaling_v1
         return self.v1
 
     def _get_resources(self, resource_type: str) -> Dict[str, List]:

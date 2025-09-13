@@ -79,38 +79,3 @@ class McpClient:
 
     async def cleanup(self) -> None:
         await self.exit_stack.aclose()
-
-    # async def cleanup(self) -> None:
-    #     """
-    #     Limpa os recursos do cliente MCP.
-    #     Tenta fazer um cleanup suave mantendo a conexão se possível.
-    #     """
-    #     try:
-    #         self._debug_log("Starting cleanup...")
-            
-    #         if hasattr(self, 'session') and self.session:
-    #             self._debug_log("Cleaning up session...")
-    #             self.session = None
-            
-    #         if hasattr(self, 'client'):
-    #             self._debug_log("Cleaning up client...")
-    #             self.client = None
-            
-    #         if hasattr(self, 'server_params'):
-    #             self._debug_log("Cleaning up server params...")
-    #             self.server_params = None
-            
-    #         # Cria um novo exit_stack para futuras conexões
-    #         self._debug_log("Resetting exit stack...")
-    #         self.exit_stack = AsyncExitStack()
-            
-    #         self._debug_log("Cleanup completed successfully")
-    #     except Exception as e:
-    #         self._debug_log(f"Error during cleanup: {str(e)}")
-    #         # Se houver erro, tenta um cleanup mais agressivo
-    #         try:
-    #             await self.exit_stack.aclose()
-    #             self.exit_stack = AsyncExitStack()
-    #         except Exception as e2:
-    #             self._debug_log(f"Error during force cleanup: {str(e2)}")
-    #         raise e

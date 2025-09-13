@@ -10,8 +10,6 @@ resources:
     kind: Pod
     list_method: list_pod_for_all_namespaces
     get_method: read_namespaced_pod
-    create_method: create_namespaced_pod
-    patch_method: patch_namespaced_pod
     delete_method: delete_namespaced_pod
     
   services:
@@ -19,8 +17,6 @@ resources:
     kind: Service
     list_method: list_service_for_all_namespaces
     get_method: read_namespaced_service
-    create_method: create_namespaced_service
-    patch_method: patch_namespaced_service
     delete_method: delete_namespaced_service
     
   deployments:
@@ -28,8 +24,6 @@ resources:
     kind: Deployment
     list_method: list_deployment_for_all_namespaces
     get_method: read_namespaced_deployment
-    create_method: create_namespaced_deployment
-    patch_method: patch_namespaced_deployment
     delete_method: delete_namespaced_deployment
     
   configmaps:
@@ -37,8 +31,6 @@ resources:
     kind: ConfigMap
     list_method: list_config_map_for_all_namespaces
     get_method: read_namespaced_config_map
-    create_method: create_namespaced_config_map
-    patch_method: patch_namespaced_config_map
     delete_method: delete_namespaced_config_map
     
   secrets:
@@ -46,8 +38,6 @@ resources:
     kind: Secret
     list_method: list_secret_for_all_namespaces
     get_method: read_namespaced_secret
-    create_method: create_namespaced_secret
-    patch_method: patch_namespaced_secret
     delete_method: delete_namespaced_secret
     
   ingresses:
@@ -55,8 +45,6 @@ resources:
     kind: Ingress
     list_method: list_ingress_for_all_namespaces
     get_method: read_namespaced_ingress
-    create_method: create_namespaced_ingress
-    patch_method: patch_namespaced_ingress
     delete_method: delete_namespaced_ingress
     
   persistent_volume_claims:
@@ -64,8 +52,6 @@ resources:
     kind: PersistentVolumeClaim
     list_method: list_persistent_volume_claim_for_all_namespaces
     get_method: read_namespaced_persistent_volume_claim
-    create_method: create_namespaced_persistent_volume_claim
-    patch_method: patch_namespaced_persistent_volume_claim
     delete_method: delete_namespaced_persistent_volume_claim
     
   replicasets:
@@ -73,8 +59,6 @@ resources:
     kind: ReplicaSet
     list_method: list_replica_set_for_all_namespaces
     get_method: read_namespaced_replica_set
-    create_method: create_namespaced_replica_set
-    patch_method: patch_namespaced_replica_set
     delete_method: delete_namespaced_replica_set
     
   statefulsets:
@@ -82,8 +66,6 @@ resources:
     kind: StatefulSet
     list_method: list_stateful_set_for_all_namespaces
     get_method: read_namespaced_stateful_set
-    create_method: create_namespaced_stateful_set
-    patch_method: patch_namespaced_stateful_set
     delete_method: delete_namespaced_stateful_set
     
   nodes:
@@ -91,8 +73,6 @@ resources:
     kind: Node
     list_method: list_node
     get_method: read_node
-    create_method: create_node
-    patch_method: patch_node
     delete_method: delete_node
     cluster_wide: true
     
@@ -101,8 +81,6 @@ resources:
     kind: PersistentVolume
     list_method: list_persistent_volume
     get_method: read_persistent_volume
-    create_method: create_persistent_volume
-    patch_method: patch_persistent_volume
     delete_method: delete_persistent_volume
     cluster_wide: true
     
@@ -111,25 +89,26 @@ resources:
     kind: Namespace
     list_method: list_namespace
     get_method: read_namespace
-    create_method: create_namespace
-    patch_method: patch_namespace
     delete_method: delete_namespace
     cluster_wide: true
-    
+
   cronjobs:
     api: batch/v1
     kind: CronJob
     list_method: list_cron_job_for_all_namespaces
     get_method: read_namespaced_cron_job
-    create_method: create_namespaced_cron_job
-    patch_method: patch_namespaced_cron_job
     delete_method: delete_namespaced_cron_job
-    
+
   jobs:
     api: batch/v1
     kind: Job
     list_method: list_job_for_all_namespaces
     get_method: read_namespaced_job
-    create_method: create_namespaced_job
-    patch_method: patch_namespaced_job
     delete_method: delete_namespaced_job
+
+  horizontal_pod_autoscalers:
+    api: autoscaling/v1
+    kind: HorizontalPodAutoscaler
+    list_method: list_horizontal_pod_autoscaler_for_all_namespaces
+    get_method: read_namespaced_horizontal_pod_autoscaler
+    delete_method: delete_namespaced_horizontal_pod_autoscaler

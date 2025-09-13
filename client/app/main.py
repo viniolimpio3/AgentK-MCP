@@ -13,7 +13,7 @@ from app.core.initialization import initialize_services
 from app.config import settings
 from app.services.chat_service import ChatService
 from app.ui.components.sidebar import Sidebar
-from app.utils.async_utils import run_task
+from app.core.async_utils import run_task
 
 # Inicializa os serviços necessários
 initialize_services()

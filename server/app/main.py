@@ -24,7 +24,7 @@ try:
     mcp = FastMCP("AgentK-Server", dependencies=["requests", "python-dotenv"])
 
     @mcp.tool()
-    def listar_nomes_recursos_k8s(resources: list) -> dict:
+    def listar_nomes_recursos_disponiveis_cluster(resources: list) -> dict:
         """
         Lista os nomes dos recursos Kubernetes disponíveis no cluster por tipo.
 
@@ -62,15 +62,16 @@ try:
             }
 
     @mcp.tool()
-    def extrair_yamls_recursos_k8s(resources: list) -> dict:
+    def extrair_yamls_todos_recursos_cluster(resources: list) -> dict:
         """
-        Extrai e exporta recursos Kubernetes do cluster atual em formato YAML.
+        Extrai todos os YAMLs dos recursos especificados de todos os namespaces do cluster.
 
-        Esta função permite exportar múltiplos recursos Kubernetes em formato YAML.
-        A saída é limpa e otimizada para melhor legibilidade e reutilização.
+        Esta função obtém TODOS os recursos dos tipos especificados em TODOS os namespaces
+        do cluster e retorna suas definições completas em formato YAML. É útil para
+        backup completo, análise de configurações ou migração entre clusters.
         
         Args:
-            resources (list): Array de tipos de recursos a serem exportados.
+            resources (list): Array de tipos de recursos a serem extraídos de todos os namespaces.
                             Valores aceitos EXATAMENTE: ['pods', 'services', 'deployments', 'configmaps', 'secrets', 'ingresses', 'persistent_volume_claims', 'replicasets', 'statefulsets', 'nodes', 'persistent_volumes', 'namespaces', 'cronjobs', 'jobs']
         
         Returns:
@@ -81,21 +82,6 @@ try:
                     - resource_count (int): Número de tipos de recursos solicitados
                     - timestamp (str): Timestamp da operação
                 - error (str): Mensagem de erro se a operação falhar
-        
-        Exemplo de retorno:
-            {
-                'success': True,
-                'data': {
-                    'resources': {
-                        'pods': [
-                            {'name': 'pod-1', 'content': 'apiVersion: v1\nkind: Pod...'},
-                            {'name': 'pod-2', 'content': 'apiVersion: v1\nkind: Pod...'}
-                        ]
-                    },
-                    'resource_count': 1,
-                    'timestamp': '2025-09-08T10:30:00'
-                }
-            }
         """
         try:
             logger.info(f"Exporting resources: {', '.join(resources)}")  # ← Comentar
@@ -124,7 +110,7 @@ try:
             }
 
     @mcp.tool()
-    def obter_yaml_objeto_especifico(resource_type: str, name: str, namespace: str = 'default') -> dict:
+    def obter_yaml_recurso_especifico(resource_type: str, name: str, namespace: str = 'default') -> dict:
         """
         Obtém a configuração YAML de um recurso específico do Kubernetes por tipo e nome.
 
@@ -145,8 +131,8 @@ try:
                 - error (str): Mensagem de erro caso o recurso não seja encontrado ou ocorra erro
 
         Exemplo de uso:
-            - obter_yaml_objeto_especifico('pods', 'nginx-pod', 'production')
-            - obter_yaml_objeto_especifico('nodes', 'worker-node-1')  # namespace não necessário
+            - obter_yaml_recurso_especifico('pods', 'nginx-pod', 'production')
+            - obter_yaml_recurso_especifico('nodes', 'worker-node-1')  # namespace não necessário
         """
         try:
             extractor = K8sExtractor(resources=[resource_type])
@@ -169,15 +155,15 @@ try:
             }
 
     @mcp.tool()
-    def implementar_yaml_no_cluster(yaml_content: str, namespace: str = 'default', skip_dry_run: bool = False) -> dict:
+    def aplicar_yaml_no_cluster(yaml_content: str, namespace: str = 'default', skip_dry_run: bool = False) -> dict:
         """
-        Implementa um recurso Kubernetes no cluster a partir de um conteúdo YAML fornecido.
+        Aplica um recurso Kubernetes no cluster a partir de um conteúdo YAML fornecido.
 
         Esta função permite criar ou atualizar recursos no cluster Kubernetes utilizando
         definições em formato YAML. Suporta múltiplos recursos separados por '---'.
 
         Args:
-            yaml_content (str): Conteúdo YAML do recurso a ser implementado. Pode conter múltiplos recursos separados por '---'.
+            yaml_content (str): Conteúdo YAML do recurso a ser aplicado. Pode conter múltiplos recursos separados por '---'.
             namespace (str, optional): Namespace onde recursos namespacados serão criados. 
                 Padrão é 'default'. Não aplicável para recursos cluster-wide como 'nodes', 'persistent_volumes' e 'namespaces'.
             skip_dry_run (bool, optional): Se True, pula a validação client dry-run prévia.
@@ -192,8 +178,8 @@ try:
                 - error (str, opcional): Mensagem de erro se falha completa
 
         Exemplo de uso:
-            - implementar_yaml_no_cluster(yaml_content, 'production')
-            - implementar_yaml_no_cluster(multi_resource_yaml)  # Múltiplos recursos
+            - aplicar_yaml_no_cluster(yaml_content, 'production')
+            - aplicar_yaml_no_cluster(multi_resource_yaml)  # Múltiplos recursos
         """
         try:
             applier = K8sApplier()
@@ -228,9 +214,9 @@ try:
             }
 
     @mcp.tool()
-    def validar_yaml_k8s_dry_run(yaml_content: str, namespace: str = 'default') -> dict:
+    def validar_yaml_kubernetes_dry_run(yaml_content: str, namespace: str = 'default') -> dict:
         """
-        Validação básica do conteúdo YAML sem aplicá-lo ao cluster (client dry-run).
+        Valida conteúdo YAML Kubernetes sem aplicá-lo ao cluster (client dry-run).
 
         Esta função permite validar a sintaxe e estrutura de recursos Kubernetes
         antes de aplicá-los efetivamente ao cluster.
@@ -247,8 +233,8 @@ try:
                 - error (str): Mensagem de erro se falha na validação
 
         Exemplo de uso:
-            - validar_yaml_k8s(yaml_content, 'production')
-            - validar_yaml_k8s(yaml_content)
+            - validar_yaml_kubernetes_dry_run(yaml_content, 'production')
+            - validar_yaml_kubernetes_dry_run(yaml_content)
         """
         try:
             applier = K8sApplier()
@@ -263,7 +249,7 @@ try:
             }
 
     @mcp.tool()
-    def deletar_recurso_k8s(resource_type: str, name: str, namespace: str = 'default') -> dict:
+    def deletar_recurso_kubernetes_cluster(resource_type: str, name: str, namespace: str = 'default') -> dict:
         """
         Remove um recurso específico do cluster Kubernetes.
 
