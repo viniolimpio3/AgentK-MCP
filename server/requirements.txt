@@ -1,0 +1,19 @@
+# Server dependencies - AgentK MCP Server Application
+# Model Context Protocol server framework
+mcp==1.7.1
+
+# Kubernetes client for cluster operations
+kubernetes==31.0.0
+
+# YAML processing
+PyYAML==6.0.2
+
+# Environment variables management
+python-dotenv==1.1.0
+
+# HTTP utilities for async operations
+httpx==0.28.1
+httpcore==1.0.9
+
+# ASGI server for production deployment
+uvicorn==0.34.2
