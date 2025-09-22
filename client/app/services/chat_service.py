@@ -1,4 +1,5 @@
 from typing import Optional, Dict, Any
+import os
 from app.classes.llm_client import LLmClient
 from app.classes.mcp_client import McpClient
 from app.ui.components.chat_interface import ChatInterface
@@ -19,8 +20,17 @@ class ChatService:
     def process_single_tool_call(self, call) -> None:
         try:
             async def do_call():
-                client = McpClient()  
-                await client.initialize_with_stdio("mcp", ["run", settings.TOOL_PATH])  
+                client = McpClient()
+                
+                # Verificar se deve usar HTTP/SSE ou stdio
+                mcp_server_url = os.getenv("MCP_SERVER_URL")
+                
+                if mcp_server_url:
+                    # Modo container/HTTP - conectar via SSE
+                    await client.initialize_with_http(mcp_server_url)
+                else:
+                    # Modo local/desenvolvimento - usar stdio
+                    await client.initialize_with_stdio("mcp", ["run", settings.TOOL_PATH])
 
                 tool_result = await client.call_tool(
                     call.function.name,

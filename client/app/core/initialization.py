@@ -50,13 +50,23 @@ def initialize_services():
                         st.write("1. Criando cliente MCP...")
                         st.session_state.mcp_client = McpClient()
 
-                        st.write(f"2. Verificando caminho do servidor: {settings.TOOL_PATH}")
-                        if not os.path.exists(settings.TOOL_PATH):
-                            raise FileNotFoundError(f"Arquivo do servidor não encontrado: {settings.TOOL_PATH}")
+                        # Verificar se deve usar HTTP/SSE ou stdio
+                        mcp_server_url = os.getenv("MCP_SERVER_URL")
+                        
+                        if mcp_server_url:
+                            # Modo container/HTTP - conectar via SSE
+                            st.write(f"2. Conectando ao servidor MCP via HTTP: {mcp_server_url}")
+                            await st.session_state.mcp_client.initialize_with_http(mcp_server_url)
+                            st.write("3. Servidor MCP conectado via HTTP com sucesso")
+                        else:
+                            # Modo local/desenvolvimento - usar stdio
+                            st.write(f"2. Verificando caminho do servidor: {settings.TOOL_PATH}")
+                            if not os.path.exists(settings.TOOL_PATH):
+                                raise FileNotFoundError(f"Arquivo do servidor não encontrado: {settings.TOOL_PATH}")
 
-                        st.write("3. Iniciando servidor MCP...")
-                        await st.session_state.mcp_client.initialize_with_stdio("mcp", ["run", settings.TOOL_PATH])
-                        st.write("4. Servidor MCP iniciado com sucesso")
+                            st.write("3. Iniciando servidor MCP via stdio...")
+                            await st.session_state.mcp_client.initialize_with_stdio("mcp", ["run", settings.TOOL_PATH])
+                            st.write("4. Servidor MCP iniciado com sucesso")
 
                         st.write("5. Obtendo lista de ferramentas...")
                         tools_list = await st.session_state.mcp_client.get_tools()

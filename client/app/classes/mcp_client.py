@@ -34,8 +34,8 @@ class McpClient:
 
         await self.session.initialize()
 
-
-    async def initialize_with_sse(self, host: str):
+    async def initialize_with_http(self, host: str):
+        """Initialize connection using SSE/HTTP transport."""
         self.client = await self.exit_stack.enter_async_context(sse_client(host))
         read, write = self.client
 

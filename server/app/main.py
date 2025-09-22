@@ -1,5 +1,6 @@
 import logging
 import sys
+import os
 from mcp.server.fastmcp import FastMCP
 from services.k8s.K8sExtractor import K8sExtractor
 from services.k8s.K8sApplier import K8sApplier
@@ -20,8 +21,45 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
+def resolve_k8s_config_file():
+    """
+    Resolve o arquivo de configuração Kubernetes baseado em variáveis de ambiente.
+    
+    Prioridade de resolução:
+    1. KUBECONFIG - Caminho explícito para arquivo de configuração
+    2. /app/.kube/config - Arquivo padrão mapeado no container
+    3. None - Deixa para as classes K8s tentarem configuração in-cluster ou padrão
+    
+    Returns:
+        str or None: Caminho para o arquivo de configuração ou None
+    """
+    # 1. Verificar variável KUBECONFIG explícita
+    kubeconfig_path = os.getenv('KUBECONFIG')
+    if kubeconfig_path and os.path.exists(kubeconfig_path):
+        logger.info(f"Usando KUBECONFIG: {kubeconfig_path}")
+        return kubeconfig_path
+    
+    # 2. Verificar arquivo padrão mapeado no container
+    default_config = '/app/.kube/config'
+    if os.path.exists(default_config):
+        logger.info(f"Usando configuração padrão mapeada: {default_config}")
+        return default_config
+    
+    # 3. Arquivo padrão alternativo
+    home_config = os.path.expanduser('~/.kube/config')
+    if os.path.exists(home_config):
+        logger.info(f"Usando configuração do diretório home: {home_config}")
+        return home_config
+    
+    # 4. Nenhum arquivo encontrado - deixar classes K8s resolverem
+    logger.warning("Nenhum arquivo de configuração K8s encontrado. Classes usarão configuração padrão.")
+    return None
+
 try:
     mcp = FastMCP("AgentK-Server", dependencies=["requests", "python-dotenv"])
+
+    # Resolver arquivo de configuração K8s uma vez no início
+    k8s_config_file = resolve_k8s_config_file()
 
     @mcp.tool()
     def listar_nomes_recursos_disponiveis_cluster(resources: list) -> dict:
@@ -42,7 +80,8 @@ try:
                 - error (str): Mensagem de erro caso ocorra algum problema
         """
         try:
-            extractor = K8sExtractor(resources=resources)
+
+            extractor = K8sExtractor(config_file=k8s_config_file, resources=resources)
 
             resource_names = extractor.list_resources_cluster(resources)
             if not resource_names:
@@ -85,7 +124,7 @@ try:
         """
         try:
             logger.info(f"Exporting resources: {', '.join(resources)}")  # ← Comentar
-            extractor = K8sExtractor(resources=resources)
+            extractor = K8sExtractor(config_file=k8s_config_file, resources=resources)
             
             cluster_resources = extractor.get_all_cluster_resources(resources)
             print(cluster_resources)  
@@ -135,7 +174,7 @@ try:
             - obter_yaml_recurso_especifico('nodes', 'worker-node-1')  # namespace não necessário
         """
         try:
-            extractor = K8sExtractor(resources=[resource_type])
+            extractor = K8sExtractor(config_file=k8s_config_file, resources=[resource_type])
 
             resource_yaml = extractor.get_resource_by_name(resource_type, name, namespace)
             if not resource_yaml:
@@ -182,7 +221,7 @@ try:
             - aplicar_yaml_no_cluster(multi_resource_yaml)  # Múltiplos recursos
         """
         try:
-            applier = K8sApplier()
+            applier = K8sApplier(config_file=k8s_config_file)
             
             result = applier.apply_yaml_content(yaml_content, namespace, skip_dry_run=skip_dry_run)
             
@@ -237,7 +276,7 @@ try:
             - validar_yaml_kubernetes_dry_run(yaml_content)
         """
         try:
-            applier = K8sApplier()
+            applier = K8sApplier(config_file=k8s_config_file)
             result = applier.dry_run_yaml(yaml_content, namespace)
             return result
             
@@ -271,7 +310,7 @@ try:
                 - error (str): Mensagem de erro caso falhe
         """
         try:
-            applier = K8sApplier()
+            applier = K8sApplier(config_file=k8s_config_file)
             result = applier.delete_resource(resource_type, name, namespace)
             return result
             return result
@@ -284,7 +323,26 @@ try:
             }
 
     if __name__ == "__main__":
-        mcp.run()
+        # Verificar argumentos da linha de comando para o modo de transporte
+        import sys
+        if "--port" in sys.argv:
+            # Extrair a porta dos argumentos
+            port_index = sys.argv.index("--port") + 1
+            if port_index < len(sys.argv):
+                try:
+                    port = int(sys.argv[port_index])
+                    mcp.settings.port = port
+                except ValueError:
+                    logger.warning("Porta inválida, usando padrão 3333")
+                    mcp.settings.port = 3333
+            else:
+                mcp.settings.port = 3333
+            
+            logger.info(f"Iniciando servidor MCP HTTP na porta {mcp.settings.port}...")
+            mcp.run(transport="sse")
+        else:
+            logger.info("Iniciando servidor MCP via stdio...")
+            mcp.run()
 except Exception as e:
     logger.error(f"Erro fatal no servidor: {str(e)}")
     raise

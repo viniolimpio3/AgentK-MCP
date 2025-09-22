@@ -44,13 +44,45 @@ AgentK é um assistente inteligente especializado em **análise, otimização e 
 - **6 MCP Tools** para operações CRUD completas
 - **Configuração Externa** (`resource_config.yaml`)
 
-## ⚙️ Instalação Rápida
+## ⚙️ Instalação
+
+### 🐳 Deploy com Docker (Recomendado)
 
 ```bash
-# 1. Clone e instale
+# 1. Clone o repositório
 git clone https://github.com/viniolimpio3/AgentK-MCP.git
 cd AgentK-MCP
-pip install -r requirements.txt
+
+# 2. Configure .env
+echo "OPENAI_API_KEY=sua-chave-openai-aqui" > .env
+
+# 3. Configure acesso ao Kubernetes (escolha uma opção):
+
+# Opção A: Use kubectl da sua máquina (Windows)
+# Edite docker-compose.yml e descomente:
+# - ${USERPROFILE}/.kube/config:/app/.kube/config:ro
+
+# Opção B: Use kubectl da sua máquina (Linux/Mac)  
+# Edite docker-compose.yml e descomente:
+# - ${HOME}/.kube/config:/app/.kube/config:ro
+
+# Opção C: Via variável de ambiente
+# export KUBECONFIG=/caminho/para/seu/kubeconfig
+
+# 4. Execute com Docker
+docker-compose up --build -d
+
+# 5. Acesse: http://localhost:8501
+```
+
+### 🔧 Instalação Local
+
+```bash
+# 1. Clone e instale dependências
+git clone https://github.com/viniolimpio3/AgentK-MCP.git
+cd AgentK-MCP
+pip install -r client/requirements.txt
+pip install -r server/requirements.txt
 
 # 2. Configure OpenAI
 export OPENAI_API_KEY="sua-chave-openai-aqui"

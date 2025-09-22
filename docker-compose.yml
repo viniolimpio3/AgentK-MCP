@@ -1,0 +1,57 @@
+services:
+  # Servidor MCP AgentK
+  agentk-server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: agentk-mcp-server
+    ports:
+      - "3333:3333"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - FASTMCP_HOST=0.0.0.0
+      - FASTMCP_PORT=3333
+      - FASTMCP_LOG_LEVEL=INFO
+      # Configuração Kubernetes - descomente e configure conforme necessário
+      # - KUBECONFIG=/app/.kube/config
+    # Mapeamento de configuração Kubernetes do Windows para container
+    volumes: 
+      # Configuração principal do kubectl (descomente para usar)
+      - ${USERPROFILE}/.kube/config:/app/.kube/config:ro
+      # Para Minikube no Windows (descomente se usar minikube)
+      - ${USERPROFILE}/.minikube:/app/.minikube:ro
+      # Para configuração customizada (defina CUSTOM_KUBECONFIG_PATH)
+      # - ${CUSTOM_KUBECONFIG_PATH}:/app/.kube/config:ro
+    networks:
+      - agentk-network
+    restart: unless-stopped
+
+  # Cliente Streamlit AgentK
+  agentk-client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: agentk-streamlit-client
+    ports:
+      - "8501:8501"
+    environment:
+      - PYTHONUNBUFFERED=1
+      # Variável para conectar ao servidor MCP via HTTP
+      - MCP_SERVER_URL=${MCP_SERVER_URL}
+      # Chave da OpenAI (deve ser definida via .env ou variável de ambiente)
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    networks:
+      - agentk-network
+    depends_on:
+      agentk-server:
+        condition: service_healthy
+    restart: unless-stopped
+
+networks:
+  agentk-network:
+    driver: bridge
+    name: agentk-network
+
+volumes:
+  agentk-logs:
+    driver: local
