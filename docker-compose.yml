@@ -12,18 +12,16 @@ services:
       - FASTMCP_HOST=0.0.0.0
       - FASTMCP_PORT=3333
       - FASTMCP_LOG_LEVEL=INFO
-      # Configuração Kubernetes - descomente e configure conforme necessário
-      # - KUBECONFIG=/app/.kube/config
-    # Mapeamento de configuração Kubernetes do Windows para container
-    volumes: 
-      # Configuração principal do kubectl (descomente para usar)
-      - ${USERPROFILE}/.kube/config:/app/.kube/config:ro
-      # Para Minikube no Windows (descomente se usar minikube)
-      - ${USERPROFILE}/.minikube:/app/.minikube:ro
-      # Para configuração customizada (defina CUSTOM_KUBECONFIG_PATH)
-      # - ${CUSTOM_KUBECONFIG_PATH}:/app/.kube/config:ro
+      - STREAMLIT_SERVER_HEADLESS=true
+      - STREAMLIT_SERVER_ENABLE_CORS=false
+      - KUBECONFIG=/home/ubuntu/.kube/config
+    volumes:
+      #- ~/.kube/:/app/.kube/:ro
+      #- ~/.minikube:/app/.minikube:ro
+      - /home/ubuntu:/home/ubuntu:ro
     networks:
       - agentk-network
+      - minikube
     restart: unless-stopped
 
   # Cliente Streamlit AgentK
@@ -51,6 +49,9 @@ networks:
   agentk-network:
     driver: bridge
     name: agentk-network
+  minikube:
+    external: true
+    name: minikube
 
 volumes:
   agentk-logs:

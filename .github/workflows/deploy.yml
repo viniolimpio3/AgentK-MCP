@@ -1,0 +1,104 @@
+name: Deploy to AWS VM
+
+on:
+  push:
+    branches: [ master ]
+  workflow_dispatch: 
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production 
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup SSH
+      uses: webfactory/ssh-agent@v0.8.0
+      with:
+        ssh-private-key: ${{ secrets.AWS_VM_SSH_KEY }}
+        
+    - name: Add VM to known hosts
+      run: |
+        ssh-keyscan -H ${{ secrets.AWS_VM_HOST }} >> ~/.ssh/known_hosts
+        
+    - name: Deploy to VM
+      run: |
+        ssh -o StrictHostKeyChecking=no ${{ secrets.AWS_VM_USER }}@${{ secrets.AWS_VM_HOST }} << 'EOF'
+          set -e
+          echo "Iniciando deploy..."
+          
+          # Navegar para o diretório do projeto
+          cd /home/${{ secrets.AWS_VM_USER }}/AgentK-MCP
+          
+          # Backup rápido (caso precise fazer rollback)
+          docker-compose ps > /tmp/agentk_status_backup.txt
+          
+          # Atualizar código
+          echo "⬇Atualizando código..."
+          git fetch origin
+          git reset --hard origin/master
+          
+          # Parar serviços
+          echo "Parando serviços..."
+          docker-compose down --remove-orphans
+          
+          # Rebuild e iniciar
+          echo "Fazendo rebuild..."
+          docker-compose build --no-cache
+          docker-compose up -d
+          
+          # Limpeza
+          echo "Limpando imagens não utilizadas..."
+          docker system prune -f
+          
+          echo "Deploy concluído!"
+        EOF
+        
+    - name: Wait for services to start
+      run: |
+        echo "⏳ Aguardando serviços iniciarem..."
+        sleep 45
+        
+    - name: Health Check
+      run: |
+        echo "🏥 Verificando saúde da aplicação..."
+        
+        # Verificar se containers estão rodando
+        ssh ${{ secrets.AWS_VM_USER }}@${{ secrets.AWS_VM_HOST }} "docker-compose ps | grep Up"
+        
+        # Tentar conectar nos endpoints (com retry)
+        for i in {1..5}; do
+          echo "Tentativa $i/5..."
+          if curl -f --max-time 10 http://${{ secrets.AWS_VM_HOST }}:3333/sse; then
+            echo "Servidor MCP está respondendo"
+            break
+          fi
+          if [ $i -eq 5 ]; then
+            echo "Servidor MCP não respondeu após 5 tentativas"
+            exit 1
+          fi
+          sleep 10
+        done
+        
+        for i in {1..5}; do
+          echo "Verificando Streamlit - Tentativa $i/5..."
+          if curl -f --max-time 10 http://${{ secrets.AWS_VM_HOST }}:8501; then
+            echo "Cliente Streamlit está respondendo"
+            break
+          fi
+          if [ $i -eq 5 ]; then
+            echo "Cliente Streamlit não respondeu após 5 tentativas"
+            exit 1
+          fi
+          sleep 10
+        done
+        
+    - name: Deployment Summary
+      if: success()
+      run: |
+        echo "Deploy realizado com sucesso!"
+        echo "Aplicação disponível em:"
+        echo "   - Servidor MCP: http://${{ secrets.AWS_VM_HOST }}:3333"
+        echo "   - Cliente Web: http://${{ secrets.AWS_VM_HOST }}:8501"
