@@ -27,6 +27,8 @@ jobs:
       run: |
         ssh -o StrictHostKeyChecking=no ${{ secrets.AWS_VM_USER }}@${{ secrets.AWS_VM_HOST }} << 'EOF'
           set -e
+
+          source ~/.bashrc
           echo "Iniciando deploy..."
           
           # Navegar para o diretório do projeto
@@ -46,12 +48,12 @@ jobs:
           
           # Rebuild e iniciar
           echo "Fazendo rebuild..."
-          docker-compose build --no-cache
-          docker-compose up -d
+          #docker-compose build --no-cache
+          docker-compose up -d --build
           
           # Limpeza
           echo "Limpando imagens não utilizadas..."
-          docker system prune -f
+          #docker system prune -f
           
           echo "Deploy concluído!"
         EOF
