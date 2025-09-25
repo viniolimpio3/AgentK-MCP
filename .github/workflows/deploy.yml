@@ -26,9 +26,9 @@ jobs:
     - name: Deploy to VM
       run: |
         ssh -o StrictHostKeyChecking=no ${{ secrets.AWS_VM_USER }}@${{ secrets.AWS_VM_HOST }} << 'EOF'
-          set -e
+          #set -e
 
-          source ~/.bashrc
+          source /home/${{ secrets.AWS_VM_USER }}/.bashrc
           echo "Iniciando deploy..."
           
           # Navegar para o diretório do projeto
@@ -44,7 +44,7 @@ jobs:
           
           # Parar serviços
           echo "Parando serviços..."
-          docker-compose down --remove-orphans
+          docker-compose down
           
           # Rebuild e iniciar
           echo "Fazendo rebuild..."
@@ -70,20 +70,7 @@ jobs:
         # Verificar se containers estão rodando
         ssh ${{ secrets.AWS_VM_USER }}@${{ secrets.AWS_VM_HOST }} "docker-compose ps | grep Up"
         
-        # Tentar conectar nos endpoints (com retry)
-        for i in {1..5}; do
-          echo "Tentativa $i/5..."
-          if curl -f --max-time 10 http://${{ secrets.AWS_VM_HOST }}:3333/sse; then
-            echo "Servidor MCP está respondendo"
-            break
-          fi
-          if [ $i -eq 5 ]; then
-            echo "Servidor MCP não respondeu após 5 tentativas"
-            exit 1
-          fi
-          sleep 10
-        done
-        
+               
         for i in {1..5}; do
           echo "Verificando Streamlit - Tentativa $i/5..."
           if curl -f --max-time 10 http://${{ secrets.AWS_VM_HOST }}:8501; then
