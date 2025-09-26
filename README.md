@@ -53,8 +53,9 @@ AgentK é um assistente inteligente especializado em **análise, otimização e 
 git clone https://github.com/viniolimpio3/AgentK-MCP.git
 cd AgentK-MCP
 
-# 2. Configure .env
-echo "OPENAI_API_KEY=sua-chave-openai-aqui" > .env
+# 2. Configure .env (OBRIGATÓRIO)
+cp .env.example .env
+# Edite o arquivo .env e configure OPENAI_API_KEY e MCP_SERVER_URL
 
 # 3. Configure acesso ao Kubernetes (escolha uma opção):
 
@@ -66,14 +67,20 @@ echo "OPENAI_API_KEY=sua-chave-openai-aqui" > .env
 # Edite docker-compose.yml e descomente:
 # - ${HOME}/.kube/config:/app/.kube/config:ro
 
-# Opção C: Via variável de ambiente
-# export KUBECONFIG=/caminho/para/seu/kubeconfig
-
 # 4. Execute com Docker
 docker-compose up --build -d
 
 # 5. Acesse: http://localhost:8501
 ```
+
+### 🚀 Deploy Automático
+
+O projeto possui **GitHub Actions** configurado para deploy automático:
+- ✅ **Deploy automático** a cada push na branch `master`
+- ✅ **Rollback manual** disponível via workflow
+- ✅ **Health checks** automáticos pós-deploy
+
+> **⚠️ Importante**: O arquivo `.env` deve existir na raiz do projeto na VM de destino com `OPENAI_API_KEY` e `MCP_SERVER_URL` configuradas.
 
 ### 🔧 Instalação Local
 
@@ -84,8 +91,9 @@ cd AgentK-MCP
 pip install -r client/requirements.txt
 pip install -r server/requirements.txt
 
-# 2. Configure OpenAI
-export OPENAI_API_KEY="sua-chave-openai-aqui"
+# 2. Configure .env (OBRIGATÓRIO)
+cp .env.example .env
+# Edite o arquivo .env e configure OPENAI_API_KEY e MCP_SERVER_URL
 
 # 3. Execute (certifique-se que kubectl está configurado)
 cd client
@@ -94,9 +102,8 @@ streamlit run app/main.py
 
 ## ✅ Principais Diferenciais
 
-- **Prevenção de Conflitos**: Elimina erro 409 com verificação automática
 - **Boas Práticas Integradas**: Sugestões de melhorias automáticas
-- **Dry-run Integrado**: Validação prévia obrigatória
+- **Dry-run Integrado**: Validação da estrutura básica
 - **Interface Conversacional**: Interação natural via chat
 - **Flexibilidade**: Configuração externa editável
 
@@ -105,11 +112,6 @@ streamlit run app/main.py
 <p align="center">
   <img src="docs/agent-k-arch.png" alt="AgentK" width="500" />
 </p>
-
-## 📞 Contato
-
-- **GitHub**: [viniolimpio3/AgentK-MCP](https://github.com/viniolimpio3/AgentK-MCP)
-- **Issues**: Reporte bugs e solicite features
 
 ---
 

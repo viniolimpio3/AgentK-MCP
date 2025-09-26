@@ -43,11 +43,7 @@ jobs:
           # Parar serviços
           echo "Parando serviços..."
           docker-compose down --remove-orphans || true
-          
-          echo "Verificando variáveis críticas:"
-          echo "OPENAI_API_KEY definida: $([ -n "$OPENAI_API_KEY" ] && echo 'SIM' || echo 'NÃO')"
-          echo "MCP_SERVER_URL definida: $([ -n "$MCP_SERVER_URL" ] && echo 'SIM' || echo 'NÃO')"
-          
+                    
           # Build e iniciar
           echo "Fazendo build e iniciando serviços..."
           docker-compose up -d --build
