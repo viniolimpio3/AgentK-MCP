@@ -5,9 +5,6 @@ FROM python:3.13.7-alpine3.21
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
 
-# Criar usuário não-root para segurança
-RUN useradd --create-home --shell /bin/bash streamlit
-
 # Definir diretório de trabalho
 WORKDIR /app
 
