@@ -114,5 +114,5 @@ streamlit run app/main.py
 </p>
 
 ---
-
+**Orientador:** Professor Dr. Fábio Henrique Cabrini
 **AgentK** - Seu especialista em configurações YAML Kubernetes 🛡️
