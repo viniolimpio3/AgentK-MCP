@@ -1,5 +1,5 @@
 # Dockerfile para AgentK MCP Server
-FROM python:3.13.7-alpine3.21
+FROM python:3.11-slim
 
 # Definir variáveis de ambiente
 ENV PYTHONUNBUFFERED=1
