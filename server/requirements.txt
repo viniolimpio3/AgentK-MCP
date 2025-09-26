@@ -3,7 +3,7 @@
 mcp==1.7.1
 
 # Kubernetes client for cluster operations
-kubernetes==32.0.1
+kubernetes==31.0.0
 
 # YAML processing
 PyYAML==6.0.2
