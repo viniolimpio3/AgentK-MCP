@@ -55,7 +55,7 @@ jobs:
       run: |
         echo "Aguardando serviços iniciarem..."
         sleep 45
-        
+
     - name: Health Check
       run: |
         echo "Verificando saúde da aplicação..."
