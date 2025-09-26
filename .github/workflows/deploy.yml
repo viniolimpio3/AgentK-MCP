@@ -26,52 +26,46 @@ jobs:
     - name: Deploy to VM
       run: |
         ssh -o StrictHostKeyChecking=no ${{ secrets.AWS_VM_USER }}@${{ secrets.AWS_VM_HOST }} << 'EOF'
-          #set -e
-
-          source /home/${{ secrets.AWS_VM_USER }}/.bashrc
+          set -e
+      
+          # Carregar variáveis do .bashrc
+          source ~/.bashrc || true
+          
           echo "Iniciando deploy..."
-          
           # Navegar para o diretório do projeto
-          cd /home/${{ secrets.AWS_VM_USER }}/AgentK-MCP
-          
-          # Backup rápido (caso precise fazer rollback)
-          docker-compose ps > /tmp/agentk_status_backup.txt
+          cd ~/AgentK-MCP
           
           # Atualizar código
-          echo "⬇Atualizando código..."
+          echo "Atualizando código..."
           git fetch origin
           git reset --hard origin/master
           
           # Parar serviços
           echo "Parando serviços..."
-          docker-compose down
+          docker-compose down --remove-orphans || true
           
-          # Rebuild e iniciar
-          echo "Fazendo rebuild..."
-          #docker-compose build --no-cache
+          echo "Verificando variáveis críticas:"
+          echo "OPENAI_API_KEY definida: $([ -n "$OPENAI_API_KEY" ] && echo 'SIM' || echo 'NÃO')"
+          echo "MCP_SERVER_URL definida: $([ -n "$MCP_SERVER_URL" ] && echo 'SIM' || echo 'NÃO')"
           
-          echo "carregando variaveis de ambiente"
-          source /home/${{ secrets.AWS_VM_USER }}/.bashrc
+          # Build e iniciar
+          echo "Fazendo build e iniciando serviços..."
           docker-compose up -d --build
-          
-          # Limpeza
-          echo "Limpando imagens não utilizadas..."
-          #docker system prune -f
           
           echo "Deploy concluído!"
         EOF
         
     - name: Wait for services to start
       run: |
-        echo "⏳ Aguardando serviços iniciarem..."
+        echo "Aguardando serviços iniciarem..."
         sleep 45
         
     - name: Health Check
       run: |
-        echo "🏥 Verificando saúde da aplicação..."
+        echo "Verificando saúde da aplicação..."
         
         # Verificar se containers estão rodando
-        ssh ${{ secrets.AWS_VM_USER }}@${{ secrets.AWS_VM_HOST }} "docker-compose ps | grep Up"
+        ssh ${{ secrets.AWS_VM_USER }}@${{ secrets.AWS_VM_HOST }} "cd ~/AgentK-MCP && docker-compose ps | grep Up"
         
                
         for i in {1..5}; do
@@ -92,5 +86,4 @@ jobs:
       run: |
         echo "Deploy realizado com sucesso!"
         echo "Aplicação disponível em:"
-        echo "   - Servidor MCP: http://${{ secrets.AWS_VM_HOST }}:3333"
         echo "   - Cliente Web: http://${{ secrets.AWS_VM_HOST }}:8501"

@@ -8,13 +8,13 @@ services:
     ports:
       - "3333:3333"
     environment:
-      - PYTHONUNBUFFERED=1
-      - FASTMCP_HOST=0.0.0.0
-      - FASTMCP_PORT=3333
-      - FASTMCP_LOG_LEVEL=INFO
-      - STREAMLIT_SERVER_HEADLESS=true
-      - STREAMLIT_SERVER_ENABLE_CORS=false
+      - PYTHONUNBUFFERED=${PYTHONUNBUFFERED:-1}
+      - FASTMCP_HOST=${FASTMCP_HOST:-0.0.0.0}
+      - FASTMCP_PORT=${FASTMCP_PORT:-3333}
+      - FASTMCP_LOG_LEVEL=${FASTMCP_LOG_LEVEL:-INFO}
       - KUBECONFIG=/home/ubuntu/.kube/config
+      # Passar variáveis do .env se existirem
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
     volumes:
       #- ~/.kube/:/app/.kube/:ro
       #- ~/.minikube:/app/.minikube:ro
@@ -33,10 +33,12 @@ services:
     ports:
       - "8501:8501"
     environment:
-      - PYTHONUNBUFFERED=1
+      - PYTHONUNBUFFERED=${PYTHONUNBUFFERED:-1}
+      - STREAMLIT_SERVER_HEADLESS=${STREAMLIT_SERVER_HEADLESS:-true}
+      - STREAMLIT_SERVER_ENABLE_CORS=${STREAMLIT_SERVER_ENABLE_CORS:-false}
       # Variável para conectar ao servidor MCP via HTTP
-      - MCP_SERVER_URL=${MCP_SERVER_URL}
-      # Chave da OpenAI (deve ser definida via .env ou variável de ambiente)
+      - MCP_SERVER_URL=${MCP_SERVER_URL:-http://agentk-server:3333}
+      # Chave da OpenAI (OBRIGATÓRIA - deve estar no .env)
       - OPENAI_API_KEY=${OPENAI_API_KEY}
     networks:
       - agentk-network
