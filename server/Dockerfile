@@ -5,6 +5,10 @@ FROM python:3.11-slim
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
 
+# Criar usuário não-root para segurança
+RUN useradd --create-home --shell /bin/bash agentk
+
+
 # Definir diretório de trabalho
 WORKDIR /app
 
