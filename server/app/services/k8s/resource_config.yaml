@@ -112,3 +112,17 @@ resources:
     list_method: list_horizontal_pod_autoscaler_for_all_namespaces
     get_method: read_namespaced_horizontal_pod_autoscaler
     delete_method: delete_namespaced_horizontal_pod_autoscaler
+  
+  replication_controllers:
+    api: v1
+    kind: ReplicationController
+    list_method: list_replication_controller_for_all_namespaces
+    get_method: read_namespaced_replication_controller
+    delete_method: delete_namespaced_replication_controller
+
+  daemon_sets:
+    api: apps/v1
+    kind: DaemonSet
+    list_method: list_daemon_set_for_all_namespaces
+    get_method: read_namespaced_daemon_set
+    delete_method: delete_namespaced_daemon_set

@@ -34,7 +34,7 @@ AgentK é um assistente inteligente especializado em **análise, otimização e 
 - 📝 **Estrutura YAML** limpa e legível
 
 ### 🔧 **Recursos Suportados**
-- **Namespaced**: `pods`, `services`, `deployments`, `configmaps`, `secrets`, `ingresses`, `pvcs`, `replicasets`, `statefulsets`, `cronjobs`, `jobs`  
+- **Namespaced**: `pods`, `services`, `deployments`, `configmaps`, `secrets`, `ingresses`, `persistent_volume_claims`, `replicasets`, `statefulsets`, `cronjobs`, `jobs`, `horizontal_pod_autoscalers`, `replication_controllers`, `daemon_sets`  
 - **Cluster-wide**: `nodes`, `persistent_volumes`, `namespaces`
 
 ## 🚀 Tecnologias
@@ -121,4 +121,4 @@ streamlit run app/main.py
 ---
 
 **Orientador:** Professor Dr. Fábio Henrique Cabrini
-**AgentK** - Seu especialista em configurações YAML Kubernetes 🛡️
+**AgentK** - Seu especialista em configurações YAML Kubernetes

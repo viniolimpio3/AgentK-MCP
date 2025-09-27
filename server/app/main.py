@@ -71,7 +71,7 @@ try:
 
         Args:
             resources (list): Array de tipos de recursos Kubernetes a serem listados. 
-                            Valores aceitos EXATAMENTE: ['pods', 'services', 'deployments', 'configmaps', 'secrets', 'ingresses', 'persistent_volume_claims', 'replicasets', 'statefulsets', 'nodes', 'persistent_volumes', 'namespaces', 'cronjobs', 'jobs']
+                            Valores aceitos EXATAMENTE: ['pods', 'services', 'deployments', 'configmaps', 'secrets', 'ingresses', 'persistent_volume_claims', 'replicasets', 'statefulsets', 'nodes', 'persistent_volumes', 'namespaces', 'cronjobs', 'jobs', 'horizontal_pod_autoscalers', 'replication_controllers', 'daemon_sets']
 
         Returns:
             dict: Dicionário com estrutura:
@@ -111,7 +111,7 @@ try:
         
         Args:
             resources (list): Array de tipos de recursos a serem extraídos de todos os namespaces.
-                            Valores aceitos EXATAMENTE: ['pods', 'services', 'deployments', 'configmaps', 'secrets', 'ingresses', 'persistent_volume_claims', 'replicasets', 'statefulsets', 'nodes', 'persistent_volumes', 'namespaces', 'cronjobs', 'jobs']
+                            Valores aceitos EXATAMENTE: ['pods', 'services', 'deployments', 'configmaps', 'secrets', 'ingresses', 'persistent_volume_claims', 'replicasets', 'statefulsets', 'nodes', 'persistent_volumes', 'namespaces', 'cronjobs', 'jobs', 'horizontal_pod_autoscalers', 'replication_controllers', 'daemon_sets']
         
         Returns:
             dict: Objeto de resposta contendo:
@@ -158,7 +158,7 @@ try:
 
         Args:
             resource_type (str): Tipo do recurso Kubernetes. 
-                               Valores aceitos EXATAMENTE: ['pods', 'services', 'deployments', 'configmaps', 'secrets', 'ingresses', 'persistent_volume_claims', 'replicasets', 'statefulsets', 'nodes', 'persistent_volumes', 'namespaces', 'cronjobs', 'jobs']
+                               Valores aceitos EXATAMENTE: ['pods', 'services', 'deployments', 'configmaps', 'secrets', 'ingresses', 'persistent_volume_claims', 'replicasets', 'statefulsets', 'nodes', 'persistent_volumes', 'namespaces', 'cronjobs', 'jobs', 'horizontal_pod_autoscalers', 'replication_controllers', 'daemon_sets']
             name (str): Nome exato do recurso no cluster
             namespace (str, optional): Namespace do recurso. Padrão é 'default'. 
                                      Não aplicável para recursos cluster-wide como 'nodes', 'persistent_volumes' e 'namespaces'
@@ -297,7 +297,7 @@ try:
 
         Args:
             resource_type (str): Tipo do recurso Kubernetes.
-                Valores aceitos EXATAMENTE: ['pods', 'services', 'deployments', 'configmaps', 'secrets', 'ingresses', 'persistent_volume_claims', 'replicasets', 'statefulsets', 'nodes', 'persistent_volumes', 'namespaces', 'cronjobs', 'jobs']
+                Valores aceitos EXATAMENTE: ['pods', 'services', 'deployments', 'configmaps', 'secrets', 'ingresses', 'persistent_volume_claims', 'replicasets', 'statefulsets', 'nodes', 'persistent_volumes', 'namespaces', 'cronjobs', 'jobs', 'horizontal_pod_autoscalers', 'replication_controllers', 'daemon_sets']
             name (str): Nome exato do recurso no cluster
             namespace (str, optional): Namespace do recurso. Padrão é 'default'.
                 Não aplicável para recursos cluster-wide como 'nodes', 'persistent_volumes' e 'namespaces'
