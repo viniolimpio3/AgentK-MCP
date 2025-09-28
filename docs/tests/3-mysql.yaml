@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mysql
+  labels:
+    name: mysql
+spec:
+  containers:
+    - resources:
+        limits:
+          cpu: 0.5
+          memory: 512Mi
+        requests:
+          cpu: invalid-cpu-value
+          memory: 256Mi
+      image: mysql
+      name: mysql
+      args:
+        - "--ignore-db-dir"
+        - "lost+found"
+      env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: mypassowrd 123
+        - name: MYSQL_USER
+          value: "admin"
+        - name: MYSQL_PASSWORD
+          value: "hardcoded-mysql-pass-2024"
+      ports:
+        - containerPort: 3306
+          name: mysql
+      volumeMounts:
+        - name: mysql-persistent-storage
+          mountPath: /var/lib/mysql
+  volumes:
+    - name: mysql-persistent-storage
+      cinder:
+        volumeID: bd82f7e2-wece-4c01-a505-4acf60b07f4a
+        fsType: ext4

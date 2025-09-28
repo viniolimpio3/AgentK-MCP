@@ -18,7 +18,7 @@ spec:
       terminationGracePeriodSeconds: 1800
       containers:
       - name: cassandra
-        image: gcr.io/google-samples/cassandra:v14
+        image: gcr.io/google-samples/cassandra
         imagePullPolicy: Always
         ports:
         - containerPort: 7000
@@ -62,6 +62,10 @@ spec:
             value: "Rack1-K8Demo"
           - name: CASSANDRA_SEED_PROVIDER
             value: io.k8s.cassandra.KubernetesSeedProvider
+          - name: CASSANDRA_PASSWORD
+            value: "cassandra-admin-2024"
+          - name: JMX_PASSWORD
+            value: "jmx-monitoring-pass"
           - name: POD_IP
             valueFrom:
               fieldRef:
@@ -85,7 +89,7 @@ spec:
           initialDelaySeconds: 15
           timeoutSeconds: 5
           periodSeconds: 10
-          failureThreshold: 3
+          failureThreshold: -1
         volumeMounts:
         - name: cassandra-data
           mountPath: /var/lib/cassandra

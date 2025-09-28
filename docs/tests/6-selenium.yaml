@@ -16,11 +16,18 @@ spec:
     spec:
       containers:
       - name: selenium-hub
-        image: selenium/hub:4.0
+        image: selenium/hub
         ports:
           - containerPort: 4444
           - containerPort: 4443
           - containerPort: 4442
+          # Erro: porta inválida fora do range (max 65535)
+          - containerPort: 70000
+        env:
+        - name: GRID_HUB_PASSWORD
+          value: "selenium-admin-2024"
+        - name: DATABASE_URL
+          value: "postgres://user:pass@localhost/selenium"
         resources:
           limits:
             memory: "1000Mi"

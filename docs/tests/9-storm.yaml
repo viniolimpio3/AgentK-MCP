@@ -19,12 +19,18 @@ spec:
       containers:
       - name: storm-worke
         image: mattf/storm-worker
+        env:
+        - name: STORM_NIMBUS_PASSWORD
+          value: "storm-admin-123"
+        - name: ZOOKEEPER_AUTH
+          value: "storm:password123"
         resources:
           limits:
-            cpu: 200m
+            cpu: 2000m
             memory: 500Mi
           requests:
-            cpu: 100m
+            # Erro: requests maior que limits
+            cpu: 3000m
             memory: 100Mi
         ports:
         - hostPort: 6700

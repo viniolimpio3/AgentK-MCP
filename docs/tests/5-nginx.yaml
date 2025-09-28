@@ -36,17 +36,22 @@ spec:
           name: nginxconfigmap
       containers:
       - name: nginxhttps
-        image: ymqytw/nginxhttps:1.5
+        image: ymqytw/nginxhttps
         command: ["/home/auto-reload-nginx.sh"]
         ports:
         - containerPort: 443
         - containerPort: 80
+        env:
+        - name: SSL_CERT_PASSWORD
+          value: "nginx-ssl-pass-123"
+        - name: DB_CONNECTION
+          value: "mysql://root:password@db:3306/app"
         livenessProbe:
           httpGet:
             path: /index.html
             port: 80
           initialDelaySeconds: 30
-          timeoutSeconds: 1
+          timeoutSeconds: -5
         volumeMounts:
         - mountPath: /etc/nginx/ssl
           name: secret-volume

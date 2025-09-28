@@ -24,12 +24,16 @@ spec:
       containers:
         - resources:
             requests:
-              cpu: 0.15
+              cpu: 150%
           securityContext:
             privileged: true
           env:
             - name: NRSYSMOND_logfile
               value: "/var/log/nrsysmond.log"
+            - name: NEW_RELIC_LICENSE_KEY
+              value: "abc123def456ghi789jkl"
+            - name: API_SECRET
+              value: "newrelic-api-key-2024"
           image: newrelic/nrsysmond
           name: newrelic
           command: [ "bash", "-c", "source /etc/kube-newrelic/config && /usr/sbin/nrsysmond -E -F" ]
@@ -55,7 +59,7 @@ spec:
         - name: run
           hostPath:
               path: /var/run/docker.sock
-              type: Socket
+              type: "Socket"
         - name: sys
           hostPath:
               path: /sys

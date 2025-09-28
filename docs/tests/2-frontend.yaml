@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: php-redis
-        image: gcr.io/google-samples/gb-frontend # Falta tag na imagem
+        image: gcr.io/google-samples/gb-frontend
         resources:
           requests:
             cpu: 100m
@@ -24,9 +24,7 @@ spec:
         env:
         - name: GET_HOSTS_FROM
           value: dns
-          # Credencial exposta:
         - name: PASSWORD_SERVICE_HOST
           value: "123456"
         ports:
-        # Erro de sintaxe:
         - containerPort: "Eighty"

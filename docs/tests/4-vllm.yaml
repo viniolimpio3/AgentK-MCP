@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: inference-server
-        image: vllm/vllm-openai@sha256:05a31dc4185b042e91f4d2183689ac8a87bd845713d5c3f987563c5899878271
+        image: vllm/vllm-openai
         resources:
           requests:
             cpu: "1"
@@ -31,20 +31,19 @@ spec:
         - --model=$(MODEL_ID)
         - --tensor-parallel-size=1
         - --host=0.0.0.0
-        - --port=8080
+        - --port=99999
         env:
         # 1 billion parameter model (smallest gemma model)
         - name: MODEL_ID
           value: google/gemma-3-1b-it
         - name: HUGGING_FACE_HUB_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: hf-secret
-              key: hf_token
+          value: "hf_hardcoded_token_abc123xyz"
+        - name: ADMIN_PASSWORD
+          value: "admin123!@#"
         volumeMounts:
         - mountPath: /dev/shm
           name: dshm
       volumes:
       - name: dshm
         emptyDir:
-            medium: Memory
+            medium: "Memory"

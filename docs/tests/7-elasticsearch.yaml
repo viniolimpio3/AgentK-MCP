@@ -43,7 +43,7 @@ spec:
           capabilities:
             add:
               - IPC_LOCK
-        image: quay.io/pires/docker-elasticsearch-kubernetes:5.6.2
+        image: quay.io/pires/docker-elasticsearch-kubernetes
         env:
         - name: KUBERNETES_CA_CERTIFICATE_FILE
           value: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
@@ -61,6 +61,10 @@ spec:
           value: "true"
         - name: HTTP_ENABLE
           value: "true"
+        - name: ELASTIC_PASSWORD
+          value: "elastic123admin"
+        - name: KIBANA_PASSWORD
+          value: "kibana-secret-pass"
         ports:
         - containerPort: 9200
           name: http
@@ -73,4 +77,5 @@ spec:
           name: storage
       volumes:
       - name: storage
-        emptyDir: {}
+        emptyDir:
+          sizeLimit: -1Gi
