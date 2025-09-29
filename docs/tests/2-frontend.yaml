@@ -7,7 +7,7 @@ spec:
     matchLabels:
       app: guestbook
       tier: frontend
-  replicas: 3
+  replicas: 1
   template:
     metadata:
       labels:
@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: php-redis
-        image: gcr.io/google-samples/gb-frontend
+        image: nginxs
         resources:
           requests:
             cpu: 100m
@@ -27,4 +27,4 @@ spec:
         - name: PASSWORD_SERVICE_HOST
           value: "123456"
         ports:
-        - containerPort: "Eighty"
+        - containerPort: 80

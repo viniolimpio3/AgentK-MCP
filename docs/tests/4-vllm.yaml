@@ -14,28 +14,24 @@ spec:
     spec:
       containers:
       - name: inference-server
-        image: vllm/vllm-openai
+        image: python:3.9-slim
         resources:
           requests:
-            cpu: "1"
-            memory: "1Gi"
-            ephemeral-storage: "1Gi"
-            nvidia.com/gpu: "1"
+            cpu: "100m"
+            memory: "128Mi"
           limits:
-            cpu: "1"
-            memory: "1Gi"
-            ephemeral-storage: "1Gi"
-            nvidia.com/gpu: "1"
-        command: ["python3", "-m", "vllm.entrypoints.openai.api_server"]
+            cpu: "200m" 
+            memory: "256Mi"
+        command: ["python5", "-c"]
         args:
-        - --model=$(MODEL_ID)
-        - --tensor-parallel-size=1
-        - --host=0.0.0.0
-        - --port=99999
+        - |
+          echo "Mock vLLM server for testing"
+          python3 -m http.server 8080
+        ports:
+        - containerPort: 8080
         env:
-        # 1 billion parameter model (smallest gemma model)
         - name: MODEL_ID
-          value: google/gemma-3-1b-it
+          value: "mock-model-for-testing"
         - name: HUGGING_FACE_HUB_TOKEN
           value: "hf_hardcoded_token_abc123xyz"
         - name: ADMIN_PASSWORD
@@ -46,4 +42,4 @@ spec:
       volumes:
       - name: dshm
         emptyDir:
-            medium: "Memory"
+            sizeLimit: "64Mi"

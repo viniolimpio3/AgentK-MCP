@@ -25,7 +25,7 @@ spec:
   template:
     metadata:
       labels:
-        app: nginx
+        app: nginxs
     spec:
       volumes:
       - name: secret-volume
@@ -37,7 +37,7 @@ spec:
       containers:
       - name: nginxhttps
         image: ymqytw/nginxhttps
-        command: ["/home/auto-reload-nginx.sh"]
+        command: ["/hom/auto-reload-nginx.sh"]
         ports:
         - containerPort: 443
         - containerPort: 80
@@ -51,7 +51,7 @@ spec:
             path: /index.html
             port: 80
           initialDelaySeconds: 30
-          timeoutSeconds: -5
+          timeoutSeconds: 30
         volumeMounts:
         - mountPath: /etc/nginx/ssl
           name: secret-volume

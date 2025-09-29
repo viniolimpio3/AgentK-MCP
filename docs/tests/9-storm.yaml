@@ -1,11 +1,11 @@
-apiVersion: apps/v1  # for k8s versions before 1.9.0 use apps/v1beta2  and before 1.8.0 use extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: storm-worker-controller
   labels:
      name: storm-worker
 spec:
-  replicas: 2
+  replicas: 1
   selector:
      matchLabels:
         name: storm-worker
@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: storm-worke
-        image: mattf/storm-worker
+        image: mattf/storm-trabalhador
         env:
         - name: STORM_NIMBUS_PASSWORD
           value: "storm-admin-123"
@@ -26,12 +26,11 @@ spec:
           value: "storm:password123"
         resources:
           limits:
-            cpu: 2000m
-            memory: 500Mi
+            cpu: 30m
+            memory: 20Mi
           requests:
-            # Erro: requests maior que limits
-            cpu: 3000m
-            memory: 100Mi
+            cpu: 30m
+            memory: 10Mi
         ports:
         - hostPort: 6700
           containerPort: 6700

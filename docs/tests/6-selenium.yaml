@@ -21,8 +21,7 @@ spec:
           - containerPort: 4444
           - containerPort: 4443
           - containerPort: 4442
-          # Erro: porta inválida fora do range (max 65535)
-          - containerPort: 70000
+          - containerPort: 65000
         env:
         - name: GRID_HUB_PASSWORD
           value: "selenium-admin-2024"
@@ -63,6 +62,6 @@ spec:
     targetPort: 4442
     name: port2
   selector:
-    app: selenium-hub
+    app: sellenium-hub
   type: NodePort
   sessionAffinity: None

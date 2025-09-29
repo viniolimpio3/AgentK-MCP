@@ -11,9 +11,9 @@ spec:
           cpu: 0.5
           memory: 512Mi
         requests:
-          cpu: invalid-cpu-value
+          cpu: 0.5
           memory: 256Mi
-      image: mysql
+      image: my-sql
       name: mysql
       args:
         - "--ignore-db-dir"

@@ -6,7 +6,7 @@ metadata:
      app: cassandra
 spec:
   serviceName: cassandra
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: cassandra
@@ -32,10 +32,10 @@ spec:
         resources:
           limits:
             cpu: "500m"
-            memory: 1Gi
+            memory: 11Mi
           requests:
            cpu: "500m"
-           memory: 1Gi
+           memory: 1Mi
         securityContext:
           capabilities:
             add:
@@ -73,7 +73,7 @@ spec:
         readinessProbe:
           exec:
             command:
-            - /bin/bash
+            - /binario/bash
             - -c
             - /ready-probe.sh
           initialDelaySeconds: 15
@@ -102,4 +102,4 @@ spec:
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:
-          storage: 1Gi
+          storage: 10Mi

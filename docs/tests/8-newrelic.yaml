@@ -1,4 +1,4 @@
-apiVersion: apps/v1 #  for k8s versions before 1.9.0 use apps/v1beta2  and before 1.8.0 use extensions/v1beta1
+apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: newrelic-agent
@@ -15,16 +15,13 @@ spec:
       labels:
         name: newrelic
     spec:
-      # Filter to specific nodes:
-      # nodeSelector:
-      #  app: newrelic
       hostPID: true
       hostIPC: true
       hostNetwork: true
       containers:
         - resources:
             requests:
-              cpu: 150%
+              cpu: 0.1
           securityContext:
             privileged: true
           env:
@@ -36,7 +33,7 @@ spec:
               value: "newrelic-api-key-2024"
           image: newrelic/nrsysmond
           name: newrelic
-          command: [ "bash", "-c", "source /etc/kube-newrelic/config && /usr/sbin/nrsysmond -E -F" ]
+          command: [ "bashi", "-c", "source /etc/kube-newrelic/config && /usr/sbin/nrsysmond -E -F" ]
           volumeMounts:
             - name: newrelic-config
               mountPath: /etc/kube-newrelic

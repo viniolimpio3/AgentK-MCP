@@ -46,7 +46,7 @@ spec:
         image: quay.io/pires/docker-elasticsearch-kubernetes
         env:
         - name: KUBERNETES_CA_CERTIFICATE_FILE
-          value: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+          value: /variavel/run/secrets/kubernetes.io/serviceaccount/ca.crt
         - name: NAMESPACE
           valueFrom:
             fieldRef:
@@ -78,4 +78,4 @@ spec:
       volumes:
       - name: storage
         emptyDir:
-          sizeLimit: -1Gi
+          sizeLimit: 215Mi
