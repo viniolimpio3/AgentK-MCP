@@ -19,7 +19,6 @@ class Sidebar:
             st.markdown('<div class="sidebar-image-container">', unsafe_allow_html=True)
             if self.logo_path:
                 st.image(self.logo_path, use_container_width=True)
-            st.markdown(f"<h1 class='sidebar-title'>{self.title}</h1>", unsafe_allow_html=True)
             st.markdown('</div>', unsafe_allow_html=True)
             
             st.markdown("---")
@@ -27,6 +26,22 @@ class Sidebar:
             # Perfil do agente
             st.markdown("#### Perfil do Agente")
             st.info("Especialista em Kubernetes, conectado ao MCP, pronto para analisar e manipular configurações do Kubernetes.")
+            
+            st.markdown("---")
+            
+            # Recursos Suportados
+            st.markdown("### Recursos Suportados")
+            
+            with st.expander("Namespaced", expanded=False):
+                st.markdown("""
+                `pods`, `services`, `deployments`, `configmaps`, `secrets`, 
+                `ingresses`, `persistent_volume_claims`, `replicasets`, 
+                `statefulsets`, `cronjobs`, `jobs`, `horizontal_pod_autoscalers`, 
+                `replication_controllers`, `daemon_sets`
+                """)
+            
+            with st.expander("Cluster-wide", expanded=False):
+                st.markdown("`nodes`, `persistent_volumes`, `namespaces`")
             
             st.markdown("---")
             # Informações do modelo
@@ -121,7 +136,6 @@ class Sidebar:
             # Área de configurações extras
             with st.expander("ℹ️ Sobre"):
                 st.markdown("""
-                **Agent K** é um assistente inteligente que utiliza 
-                o poder do GPT-4 combinado com ferramentas específicas 
-                para ajudar em suas tarefas.
+                **Agent K** é um assistente inteligente baseado no modelo LLM gpt-4.1,
+                que utiliza ferramentas específicas para ajudar em suas tarefas.
                 """)

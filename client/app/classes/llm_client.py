@@ -32,5 +32,6 @@ class LLmClient:
             messages=self.history,
             tools=tools,
             tool_choice="auto",
-            parallel_tool_calls=False
+            parallel_tool_calls=False,
+            temperature=0
         )

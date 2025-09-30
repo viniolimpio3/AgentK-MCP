@@ -15,7 +15,7 @@
 .sidebar img {
     display: block;
     margin: 0 auto;
-    width: 150px;
+    width: 80px;
     height: auto;
 }
 
@@ -35,7 +35,7 @@
     max-width: 1200px;
     margin: 0 auto;
     padding: 2rem;
-    padding-bottom: 80px; /* Espaço para o disclaimer fixo */
+    padding-bottom: 80px;
 }
 
 /* Disclaimer fixo na parte inferior */
