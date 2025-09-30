@@ -1,0 +1,17 @@
+[theme]
+# Força o tema dark
+base = "dark"
+primaryColor = "#ff6b35"
+backgroundColor = "#0e1117"
+secondaryBackgroundColor = "#262730"
+textColor = "#fafafa"
+
+[server]
+# Configurações do servidor
+headless = true
+enableCORS = false
+enableXsrfProtection = false
+
+[browser]
+# Configurações do browser
+gatherUsageStats = false

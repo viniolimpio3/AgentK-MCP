@@ -17,12 +17,12 @@ services:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
     volumes:
       # Windows (ajuste conforme necessário)
-      # - ~/.kube/:/app/.kube/:ro
-      # - ~/.minikube:/app/.minikube:ro
+      - ~/.kube/:/app/.kube/:ro
+      - ~/.minikube:/app/.minikube:ro
 
       # Linux (comente se estiver usando Windows)
-      - /home/ubuntu/.kube:/home/ubuntu/.kube:ro
-      - /home/ubuntu/.minikube:/home/ubuntu/.minikube:ro
+      # - /home/ubuntu/.kube:/home/ubuntu/.kube:ro
+      # - /home/ubuntu/.minikube:/home/ubuntu/.minikube:ro
     networks:
       - agentk-network
       - minikube

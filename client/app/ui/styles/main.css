@@ -54,3 +54,41 @@
     z-index: 1000;
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
 }
+
+/* Força tema dark - fallback caso config.toml não funcione */
+.stApp {
+    background-color: #0e1117 !important;
+    color: #fafafa !important;
+}
+
+.stApp > header {
+    background-color: transparent !important;
+}
+
+.stApp .main .block-container {
+    background-color: #0e1117 !important;
+}
+
+/* Sidebar dark */
+.css-1d391kg {
+    background-color: #262730 !important;
+}
+
+/* Input fields dark */
+.stTextInput > div > div > input {
+    background-color: #262730 !important;
+    color: #fafafa !important;
+    border-color: #4a4a4a !important;
+}
+
+/* Buttons dark */
+.stButton > button {
+    background-color: #262730 !important;
+    color: #fafafa !important;
+    border-color: #4a4a4a !important;
+}
+
+.stButton > button:hover {
+    background-color: #ff6b35 !important;
+    border-color: #ff6b35 !important;
+}
