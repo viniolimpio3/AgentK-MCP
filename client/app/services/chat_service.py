@@ -5,8 +5,10 @@ from app.classes.mcp_client import McpClient
 from app.ui.components.chat_interface import ChatInterface
 from app.core.async_utils import run_task
 from app.config import settings
+from app.services.export_service import ExportService
 import streamlit as st
 import json
+import datetime
 
 class ChatService:
     """
@@ -16,9 +18,16 @@ class ChatService:
     def __init__(self, llm_client: LLmClient):
         self.llm_client = llm_client
         self.chat_interface = ChatInterface()
+        # Usa um serviço de exportação compartilhado na sessão
+        if 'export_service' not in st.session_state:
+            st.session_state.export_service = ExportService()
+        self.export_service = st.session_state.export_service
 
     def process_single_tool_call(self, call) -> None:
         try:
+            # Registra o início da chamada da ferramenta
+            tool_start_time = self.export_service.record_request_start()
+            
             async def do_call():
                 client = McpClient()
                 
@@ -41,6 +50,9 @@ class ChatService:
                 return tool_result
 
             call_result = run_task(do_call())
+            
+            # Registra o fim da chamada da ferramenta
+            self.export_service.record_request_end(tool_start_time)
 
             return ''.join(item.text for item in call_result.content if item.type == 'text')
         except Exception as e:
@@ -53,7 +65,8 @@ class ChatService:
         if response.choices[0].finish_reason == 'tool_calls':
             tool_reply = response.choices[0].message.content 
 
-            if tool_reply is not None:
+            # Só exibe a mensagem do assistente se houver conteúdo não-vazio
+            if tool_reply is not None and tool_reply.strip():
                 with st.chat_message("assistant"):
                     st.markdown(tool_reply)
 
@@ -99,12 +112,23 @@ class ChatService:
                 "content": assistant_reply,
                 "role": "assistant"
             })
+            
+            # Incrementa contador de mensagens
+            if 'message_count' not in st.session_state:
+                st.session_state.message_count = 0
+            st.session_state.message_count += 1
+            
+            # Registra timestamp da mensagem do assistente
+            self.export_service.record_message_timestamp(st.session_state.message_count)
     def render_chat_history(self) -> None:
         """Render the complete chat history."""
         for message in st.session_state.llm_client.history:
             if message["role"] != "tool":
-                with st.chat_message(message["role"]):
-                    st.markdown(message["content"])
+                # Só renderiza a mensagem se houver conteúdo válido
+                content = message.get("content", "")
+                if content and content.strip():
+                    with st.chat_message(message["role"]):
+                        st.markdown(content)
 
                 if message["role"] == 'assistant' and "tool_calls" in message and message["tool_calls"]:
                     for call in message["tool_calls"]:
@@ -116,3 +140,35 @@ class ChatService:
                 with st.chat_message(name="tool", avatar=":material/data_object:"):
                     with st.expander("Visualizar resposta"):
                         st.code(message["content"])
+    
+    def process_llm_request(self, tools=[]):
+        """
+        Processa uma requisição para o LLM com rastreamento de tempo e tokens.
+        
+        Args:
+            tools: Lista de ferramentas disponíveis para o LLM
+            
+        Returns:
+            Resposta do LLM
+        """
+        request_start = self.export_service.record_request_start()
+        response = self.llm_client.complete_chat(tools)
+        self.export_service.record_request_end(request_start, response)
+        return response
+    
+    def export_conversation_history(self, include_tools: bool = True) -> tuple[str, str]:
+        """
+        Exporta o histórico da conversa em formato Markdown.
+        
+        Args:
+            include_tools: Se deve incluir as chamadas de ferramentas no export
+            
+        Returns:
+            Tuple contendo (conteúdo_markdown, nome_do_arquivo)
+        """
+        markdown_content = self.export_service.generate_markdown_export(
+            self.llm_client.history, 
+            include_tools
+        )
+        filename = self.export_service.get_filename()
+        return markdown_content, filename

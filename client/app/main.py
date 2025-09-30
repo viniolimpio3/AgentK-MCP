@@ -44,12 +44,32 @@ prompt = chat_service.chat_interface.get_user_input(disabled=st.session_state.is
 if prompt:
     st.session_state.is_processing = True
     st.session_state.llm_client.add_user_message(prompt)
+    
+    # Incrementa contador de mensagens do usuário
+    if 'message_count' not in st.session_state:
+        st.session_state.message_count = 0
+    st.session_state.message_count += 1
+    
+    # Registra timestamp da mensagem do usuário
+    chat_service.export_service.record_message_timestamp(st.session_state.message_count)
+    
     chat_service.chat_interface.render_message("user", prompt, avatar=":material/person:")
     with st.container():
         with st.spinner("Processando sua pergunta..."):
-            response = st.session_state.llm_client.complete_chat(st.session_state.tools)
+            # Usa o novo método que rastreia tempo e tokens
+            response = chat_service.process_llm_request(st.session_state.tools)
             chat_service.resolve_chat(response)
     st.session_state.is_processing = False
 
 # Fecha o container principal
 st.markdown('</div>', unsafe_allow_html=True)
+
+# Disclaimer fixo na parte inferior
+st.markdown(
+    '''
+    <div class="disclaimer-footer">
+        O AgentK pode cometer erros. Sempre revise antes de qualquer implementação
+    </div>
+    ''', 
+    unsafe_allow_html=True
+)

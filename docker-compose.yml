@@ -12,13 +12,16 @@ services:
       - FASTMCP_HOST=${FASTMCP_HOST:-0.0.0.0}
       - FASTMCP_PORT=${FASTMCP_PORT:-3333}
       - FASTMCP_LOG_LEVEL=${FASTMCP_LOG_LEVEL:-INFO}
-      - KUBECONFIG=/home/ubuntu/.kube/config
+      - KUBECONFIG=/app/.kube/config
       # Passar variáveis do .env se existirem
       - OPENAI_API_KEY=${OPENAI_API_KEY}
     volumes:
-      #- ~/.kube/:/app/.kube/:ro
-      #- ~/.minikube:/app/.minikube:ro
-      - /home/ubuntu:/home/ubuntu:ro
+      # Windows (ajuste conforme necessário)
+      - ~/.kube/:/app/.kube/:ro
+      - ~/.minikube:/app/.minikube:ro
+
+      # Linux (comente se estiver usando Windows)
+      #- /home/ubuntu:/home/ubuntu:ro
     networks:
       - agentk-network
       - minikube

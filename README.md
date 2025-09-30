@@ -37,6 +37,11 @@ AgentK é um assistente inteligente especializado em **análise, otimização e 
 - **Namespaced**: `pods`, `services`, `deployments`, `configmaps`, `secrets`, `ingresses`, `persistent_volume_claims`, `replicasets`, `statefulsets`, `cronjobs`, `jobs`, `horizontal_pod_autoscalers`, `replication_controllers`, `daemon_sets`  
 - **Cluster-wide**: `nodes`, `persistent_volumes`, `namespaces`
 
+### 📊 **Exportação de Histórico**
+- **Relatórios em Markdown** com estatísticas da sessão
+- **Métricas de performance** (tempo de execução, tokens utilizados)
+- **Histórico completo** de conversas e chamadas MCP
+
 ## 🚀 Tecnologias
 
 - 🖥️ **FastMCP** + **Kubernetes Python Client** (Servidor)

@@ -42,6 +42,10 @@ def initialize_services():
                 "role": "system",
                 "content": settings.SYSTEM_INSTRUCTIONS
             })
+        
+        # Inicializa contador de mensagens para a sidebar
+        if "message_count" not in st.session_state:
+            st.session_state.message_count = 0
 
         if "mcp_client" not in st.session_state:
             with st.spinner("Inicializando serviços..."): 

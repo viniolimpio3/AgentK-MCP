@@ -39,6 +39,85 @@ class Sidebar:
             st.markdown(f"**Mensagens trocadas:** {message_count}")
             
             st.markdown("---")
+            
+            # Seção de Exportação
+            st.markdown("### 📄 Exportar Conversa")
+            
+            # Opções de exportação
+            include_tools = st.checkbox("Incluir chamadas de ferramentas", value=True, 
+                                      help="Incluir detalhes das chamadas MCP no relatório")
+            
+            # Verifica se há histórico para exportar
+            has_history = (
+                "llm_client" in st.session_state and 
+                hasattr(st.session_state.llm_client, 'history') and
+                len(st.session_state.llm_client.history) > 1
+            )
+            
+            if st.button("📥 Exportar Histórico", 
+                        disabled=not has_history,
+                        help="Exporta o histórico da sessão atual em formato Markdown"):
+                if has_history:
+                    # Importa aqui para evitar dependência circular
+                    from app.services.chat_service import ChatService
+                    
+                    # Cria uma instância temporária do chat service para exportação
+                    temp_chat_service = ChatService(st.session_state.llm_client)
+                    
+                    try:
+                        markdown_content, filename = temp_chat_service.export_conversation_history(include_tools)
+                        
+                        # Oferece o download do arquivo
+                        st.download_button(
+                            label="💾 Baixar Relatório",
+                            data=markdown_content,
+                            file_name=filename,
+                            mime="text/markdown",
+                            help="Clique para baixar o relatório da sessão"
+                        )
+                        
+                        st.success("✅ Relatório gerado com sucesso!")
+                        
+                        # Mostra preview das estatísticas
+                        stats = temp_chat_service.export_service.session_stats
+                        st.markdown("**📊 Resumo da Sessão:**")
+                        st.markdown(f"- Requisições: {stats['total_requests']}")
+                        st.markdown(f"- Tokens: {stats['total_input_tokens'] + stats['total_output_tokens']}")
+                        
+                    except Exception as e:
+                        st.error(f"❌ Erro ao gerar relatório: {str(e)}")
+                else:
+                    st.warning("⚠️ Nenhuma conversa para exportar")
+            
+            if not has_history:
+                st.info("💡 Inicie uma conversa para habilitar a exportação")
+            
+            # Botão para limpar histórico
+            if st.button("🗑️ Limpar Histórico", 
+                        disabled=not has_history,
+                        help="Remove todas as mensagens e reseta as estatísticas"):
+                if has_history:
+                    # Limpa o histórico mantendo apenas a mensagem do sistema
+                    system_message = None
+                    for msg in st.session_state.llm_client.history:
+                        if isinstance(msg, dict) and msg.get("role") == "system":
+                            system_message = msg
+                            break
+                    
+                    st.session_state.llm_client.history.clear()
+                    if system_message:
+                        st.session_state.llm_client.history.append(system_message)
+                    
+                    # Reseta contadores e estatísticas
+                    st.session_state.message_count = 0
+                    if 'export_service' in st.session_state:
+                        st.session_state.export_service.reset_session_stats()
+                    
+                    st.success("✅ Histórico limpo com sucesso!")
+                    st.rerun()
+            
+            st.markdown("---")
+            
             # Área de configurações extras
             with st.expander("ℹ️ Sobre"):
                 st.markdown("""
