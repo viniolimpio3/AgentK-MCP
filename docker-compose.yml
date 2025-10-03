@@ -21,8 +21,8 @@ services:
       # - ~/.minikube:/app/.minikube:ro
 
       # Linux (comente se estiver usando Windows)
-      - /home/ubuntu/.kube:/home/ubuntu/.kube:ro
-      - /home/ubuntu/.minikube:/home/ubuntu/.minikube:ro
+      - /home/ubuntu/.kube:/home/ubuntu/.kube
+      - /home/ubuntu/.minikube:/home/ubuntu/.minikube
     networks:
       - agentk-network
       - minikube
