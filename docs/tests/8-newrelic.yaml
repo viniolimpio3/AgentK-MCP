@@ -20,7 +20,7 @@ spec:
       hostNetwork: true
       containers:
         - name: newrelic
-          image: newrelic/infrastructure:1.69.0
+          image: newrelic/infrastructure
           resources:
             requests:
               cpu: 0.1
