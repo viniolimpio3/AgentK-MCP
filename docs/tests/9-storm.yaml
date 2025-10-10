@@ -18,12 +18,15 @@ spec:
     spec:
       containers:
       - name: storm-worke
-        image: mattf/storm-trabalhador
+        image: storm
         env:
         - name: STORM_NIMBUS_PASSWORD
           value: "storm-admin-123"
-        - name: ZOOKEEPER_AUTH
-          value: "storm:password123"
+        - name: STORM_NIMBUS
+          value: "nimbus.default.svc.cluster.local"
+        - name: STORM_ZOOKEEPER_SERVERS
+          value: "zookeeper.default.svc.cluster.local:2181"
+
         resources:
           limits:
             cpu: 30m
