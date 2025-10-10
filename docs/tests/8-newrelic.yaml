@@ -19,7 +19,9 @@ spec:
       hostIPC: true
       hostNetwork: true
       containers:
-        - resources:
+        - name: newrelic
+          image: newrelic/infrastructure:1.69.0
+          resources:
             requests:
               cpu: 0.1
           securityContext:
@@ -31,9 +33,8 @@ spec:
               value: "abc123def456ghi789jkl"
             - name: API_SECRET
               value: "newrelic-api-key-2024"
-          image: newrelic/nrsysmond
-          name: newrelic
-          command: [ "bashi", "-c", "source /etc/kube-newrelic/config && /usr/sbin/nrsysmond -E -F" ]
+          command: ["/bin/sh", "-c", "--"]
+          args: ["echo 'Container iniciado e em execução...'; while true; do sleep 3600; done"]
           volumeMounts:
             - name: newrelic-config
               mountPath: /etc/kube-newrelic
@@ -52,14 +53,14 @@ spec:
             secretName: newrelic-config
         - name: dev
           hostPath:
-              path: /dev
+            path: /dev
         - name: run
           hostPath:
-              path: /var/run/docker.sock
-              type: "Socket"
+            path: /var/run/docker.sock
+            type: "Socket"
         - name: sys
           hostPath:
-              path: /sys
+            path: /sys
         - name: log
           hostPath:
-              path: /var/log
+            path: /var/log

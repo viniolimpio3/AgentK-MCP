@@ -62,7 +62,7 @@ Use o seguinte prompt padrão para avaliar cada arquivo YAML:
 
 ```
 [service, deployment, whatever]: [nomes..]
-Analise os arquivos YAML dos recursos Kubernetes acima, procurando por misconfigurations e possíveis incoerências.
+Analise os arquivos YAML dos recursos Kubernetes acima, procurando por misconfigurations e possíveis incoerências, considerando o deploy em ambiente de produção.
 
 Verifique se as configurações estão corretas de acordo com as especificações do Kubernetes e identifique qualquer problema que possa comprometer a funcionalidade ou coerência com as boas práticas.
 
