@@ -80,16 +80,6 @@ spec:
           timeoutSeconds: 5
           periodSeconds: 10
           failureThreshold: 3
-        livenessProbe:
-          exec:
-            command:
-            - /bin/bash
-            - -c
-            - "nodetool status"
-          initialDelaySeconds: 15
-          timeoutSeconds: 5
-          periodSeconds: 10
-          failureThreshold: -1
         volumeMounts:
         - name: cassandra-data
           mountPath: /var/lib/cassandra
