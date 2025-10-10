@@ -17,8 +17,10 @@ spec:
         uses: nimbus
     spec:
       containers:
-      - name: storm-worke
+      - name: storm-worker
         image: storm
+        command: ["/bin/sh", "-c"]
+        args: ["echo 'Worker stub iniciado...'; while true; do sleep 3600; done"]
         env:
         - name: STORM_NIMBUS_PASSWORD
           value: "storm-admin-123"
