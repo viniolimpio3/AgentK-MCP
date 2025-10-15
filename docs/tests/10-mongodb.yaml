@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb-service
+  namespace: default
+spec:
+  selector:
+    app: nonexistent-mongodb
+  type: ClusterIP
+  ports:
+  - name: mongodb
+    port: 27017
+    targetPort: 27017
+    protocol: TCP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb-deployment
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongodb-app
+  template:
+    metadata:
+      labels:
+        app: mongodb-app
+    spec:
+      containers:
+      - name: mongodb-container
+        # MISCONFIGURATION 1: Imagem sem tag (latest implícito)
+        image: mongo
+        ports:
+        - containerPort: 27017
+        # MISCONFIGURATION 2: Credenciais expostas em variáveis de ambiente
+        env:
+        - name: MONGO_INITDB_ROOT_USERNAME
+          value: "admin"
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          value: "SecurePassword123!"
+        - name: MONGODB_URL
+          value: "mongodb://admin:SecurePassword123@mongodb-service:27017/admin"
+        volumeMounts:
+        - name: mongo-storage
+          mountPath: /data/db
+      volumes:
+      - name: mongo-storage
+        emptyDir: {}
