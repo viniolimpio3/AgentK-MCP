@@ -13,7 +13,7 @@
 | 7 | `7-elasticsearch.yaml` | Elasticsearch Cluster | Service, RC | ELASTIC_PASSWORD, KIBANA_PASSWORD | quay.io/pires/docker-elasticsearch-kubernetes | Path: `/variavel/run` (typo em /var/run) |
 | 8 | `8-newrelic.yaml` | New Relic Agent | DaemonSet | NEW_RELIC_LICENSE_KEY, API_SECRET | newrelic/nrsysmond | Command: `"bashi"` (typo em bash) |
 | 9 | `9-storm.yaml` | Apache Storm Worker | Deployment | STORM_NIMBUS_PASSWORD, ZOOKEEPER_AUTH | mattf/storm-trabalhador | Container name: `storm-worke` (truncado) |
-| 10 | `10-cassandra.yaml` | Cassandra Database | StatefulSet | CASSANDRA_PASSWORD, JMX_PASSWORD | cassandra | ReadinessProbe: `/binario/bash` (typo em /bin) |
+| 10 | `10-mongodb.yaml` | MongoDB Database | Deployment, Service | MONGO_INITDB_ROOT_PASSWORD, MONGODB_URL | mongo | Selector: `nonexistent-mongodb` (app selector inválido) |
 
 ## 🎯 Tipos de Misconfigurations Implementadas
 
