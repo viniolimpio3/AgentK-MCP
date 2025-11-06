@@ -35,6 +35,7 @@ services:
     container_name: agentk-streamlit-client
     ports:
       - "8501:8501"
+      - "443:443"
     environment:
       - PYTHONUNBUFFERED=${PYTHONUNBUFFERED:-1}
       - STREAMLIT_SERVER_HEADLESS=${STREAMLIT_SERVER_HEADLESS:-true}

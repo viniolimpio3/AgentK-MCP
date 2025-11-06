@@ -32,12 +32,12 @@ RUN chown -R streamlit:streamlit /app
 # Mudar para usuário não-root
 USER streamlit
 
-# Expor porta 8501 (porta padrão do Streamlit)
-EXPOSE 8501
+# Expor porta 443 (porta padrão do Streamlit)
+EXPOSE 443
 
 # Comando padrão para iniciar o Streamlit
-CMD ["streamlit", "run", "app/main.py", "--server.port=8501", "--server.address=0.0.0.0", "--server.headless=true", "--server.enableCORS=false", "--server.enableXsrfProtection=false"]
+CMD ["streamlit", "run", "app/main.py", "--server.port=443", "--server.address=0.0.0.0", "--server.headless=true", "--server.enableCORS=false", "--server.enableXsrfProtection=false"]
 
 # Health check para verificar se o Streamlit está funcionando
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:8501/_stcore/health || exit 1
+    CMD curl -f http://localhost:443/_stcore/health || exit 1
