@@ -94,7 +94,6 @@ docker-compose up --build -d
 
 ### 🧪 Testes e Validação
 - **[Procedimento de Testes do AgentK](docs/Procedimento-Testes-AgentK.md)** - Metodologia completa dos 50 testes realizados
-- **[Resumo das Misconfigurations](docs/Resumo-misconfigurations-tests.md)** - Detalhamento das misconfigurations intencionais
 - **[Arquivos de Teste YAML](docs/tests/)** - 10 arquivos com misconfigurations + 50 resultados exportados
 
 ### 📊 Resultados e Métricas
@@ -113,7 +112,6 @@ docker-compose up --build -d
 | Documento | Descrição |
 |-----------|-----------|
 | [Procedimento de Testes](docs/Procedimento-Testes-AgentK.md) | Metodologia, resultados e análise dos 50 testes |
-| [Misconfigurations](docs/Resumo-misconfigurations-tests.md) | 29 misconfigurations em 10 arquivos de teste |
 | [Resultados dos Testes](docs/tests/results/) | 50 sessões exportadas com timestamps |
 | [VM Setup](docs/VM-environment-config.md) | Configuração do ambiente de produção |
 | [CI/CD Pipeline](docs/Pipeline-GithubActions-deployment-config.md) | Deploy automatizado com GitHub Actions |

@@ -19,16 +19,16 @@ Localizados em: `docs/tests/`
 
 | # | Arquivo | Misconfigs Intencionais |
 |---|---------|------------------------|
-| 1 | `1-orion.yaml` | Credenciais expostas, Imagem sem tag, Label mismatch |
-| 2 | `2-frontend.yaml` | Credenciais expostas, Imagem inválida (`nginxs`) |
-| 3 | `3-mysql.yaml` | Credenciais expostas, Imagem inválida (`my-sql`) |
-| 4 | `4-vllm.yaml` | Credenciais expostas, Imagem sem tag, Comando inválido (`python5`) |
-| 5 | `5-nginx.yaml` | Credenciais expostas, Imagem sem tag, Path inválido, Label mismatch |
-| 6 | `6-selenium.yaml` | Credenciais expostas, Imagem sem tag, Label mismatch (typo) |
-| 7 | `7-elasticsearch.yaml` | Credenciais expostas, Imagem sem tag, Path inválido (typo) |
-| 8 | `8-newrelic.yaml` | Credenciais expostas, Imagem sem tag |
-| 9 | `9-storm.yaml` | Credenciais expostas, Imagem sem tag |
-| 10 | `10-mongodb.yaml` | Credenciais expostas, Imagem sem tag, Label mismatch |
+| 1 | `1-orion.yaml` | Credenciais expostas, Imagem sem tag, Erro semântico (label mismatch) |
+| 2 | `2-frontend.yaml` | Credenciais expostas, Imagem sem tag, Erro semântico (imagem inválida `nginxs`) |
+| 3 | `3-mysql.yaml` | Credenciais expostas, Imagem sem tag, Erro semântico (imagem inválida `my-sql`) |
+| 4 | `4-vllm.yaml` | Credenciais expostas, Imagem sem tag, Erro semântico (comando inválido `python5`) |
+| 5 | `5-nginx.yaml` | Credenciais expostas, Imagem sem tag, Erro semântico (path inválido + label mismatch) |
+| 6 | `6-selenium.yaml` | Credenciais expostas, Imagem sem tag, Erro semântico (label mismatch com typo) |
+| 7 | `7-elasticsearch.yaml` | Credenciais expostas, Imagem sem tag, Erro semântico (path inválido com typo) |
+| 8 | `8-newrelic.yaml` | Credenciais expostas, Imagem sem tag, Erro semântico (selector incorreto) |
+| 9 | `9-storm.yaml` | Credenciais expostas, Imagem sem tag, Erro semântico (container name incorreto) |
+| 10 | `10-mongodb.yaml` | Credenciais expostas, Imagem sem tag, Erro semântico (label mismatch) |
 
 ### Resultados Exportados (50 arquivos)
 Localizados em: `docs/tests/results/`
@@ -133,7 +133,7 @@ Faça a atualização do serviço e do deployment. Se houver conflito, remova e 
 **Ações Esperadas do AgentK:**
 1. Gerar YAML corrigido
 2. Validar o YAML (dry-run)
-3. Aplicar no cluster usando `kubectl apply`
+3. Aplicar no cluster usando tool mcp `aplicar_yaml_no_cluster`
 4. Confirmar a aplicação
 
 ### 6️⃣ **Verificação da Aplicação**
@@ -243,27 +243,26 @@ Cada sessão foi exportada automaticamente pelo AgentK, gerando:
   - `3-mysql.yaml` (único caso com desempenho abaixo de 80%)
 - 🎯 **Taxa Geral de Sucesso**: 88% - 44 implementações bem-sucedidas de 50 tentativas
 
-### 📊 Tabela 2: Performance e Custos
+### 📊 Tabela 3: Performance e Custos
 
-| Arquivo | Média Tokens Entrada | Média Tokens Saída | Tempo Médio (s) | Custo/100 Sessões (US$) | Média Custos (US$) |
-|---------|---------------------|-------------------|-----------------|------------------------|-------------------|
-| `1-orion.yaml` | 6.998 | 153 | 0,29 | 1,52 | 2,50 |
-| `2-frontend.yaml` | 22.070 | 730 | 0,74 | 5,00 | 2,50 |
-| `3-mysql.yaml` | 9.675 | 1.467 | 3,94 | 3,11 | 2,50 |
-| `4-vllm.yaml` | 11.622 | 663 | 0,93 | 2,85 | 2,50 |
-| `5-nginx.yaml` | 12.133 | 449 | 0,70 | 2,79 | 2,50 |
-| `6-selenium.yaml` | 20.618 | 669 | 1,27 | 4,66 | 2,50 |
-| `7-elasticsearch.yaml` | 6.244 | 58 | 0,37 | 1,30 | 2,50 |
-| `8-newrelic.yaml` | 6.022 | 62 | 0,31 | 1,25 | 2,50 |
-| `9-storm.yaml` | 5.903 | 137 | 0,47 | 1,29 | 2,50 |
-| `10-mongodb.yaml` | 5.722 | 58 | 0,46 | 1,19 | 2,50 |
-| **MÉDIA GERAL** | **10.701** | **445** | **0,95s** | **2,70** | **2,50** |
+| Arquivo | Média Tokens Entrada | Média Tokens Saída | Tempo Médio (s) | Custo/100 Sessões (US$) |
+|---------|---------------------|-------------------|-----------------|------------------------|
+| `1-orion.yaml` | 6.998 | 153 | 0,29 | 1,52 |
+| `2-frontend.yaml` | 22.070 | 730 | 0,74 | 5,00 |
+| `3-mysql.yaml` | 9.675 | 1.467 | 3,94 | 3,11 |
+| `4-vllm.yaml` | 11.622 | 663 | 0,93 | 2,85 |
+| `5-nginx.yaml` | 12.133 | 449 | 0,70 | 2,79 |
+| `6-selenium.yaml` | 20.618 | 669 | 1,27 | 4,66 |
+| `7-elasticsearch.yaml` | 6.244 | 58 | 0,37 | 1,30 |
+| `8-newrelic.yaml` | 6.022 | 62 | 0,31 | 1,25 |
+| `9-storm.yaml` | 5.903 | 137 | 0,47 | 1,29 |
+| `10-mongodb.yaml` | 5.722 | 58 | 0,46 | 1,19 |
+| **MÉDIA GERAL** | **10.701** | **445** | **0,95s** | **2,50** |
 
 #### 💰 Análise de Custos:
-- **Custo médio por teste**: US$ 2,50
-- **Custo total (50 testes)**: US$ 125,00
-- **Custo por 100 sessões (projetado)**: US$ 2,70 (média)
-- **Range de custos**: US$ 1,19 - US$ 5,00 por 100 sessões
+- **Custo total (50 testes realizados)**: US$ 1,63
+- **Custo médio projetado por 100 sessões**: US$ 2,50
+- **Range de custos**: US$ 1,19 - US$ 5,00 por 100 sessões (variação por arquivo)
 
 #### ⚡ Análise de Performance:
 - **Tempo médio de resposta**: 0,95 segundos
@@ -345,10 +344,8 @@ Cada sessão foi exportada automaticamente pelo AgentK, gerando:
 
 ## 🔗 Arquivos Relacionados
 
-- [Resumo das Misconfigurations](./misconfigurations_resumo.md)
-- [Arquivos de Teste YAML](./tests/)
-- [Resultados Exportados](./tests/results/)
-- [Prompt Template](./misconfigurations_resumo.md#-template-de-prompt-para-testes)
+- [Arquivos de Teste YAML](./tests/) - 10 YAMLs com misconfigurations intencionais
+- [Resultados Exportados](./tests/results/) - 50 sessões de teste completas
 
 ## 📊 Resumo Executivo
 
@@ -362,8 +359,8 @@ Cada sessão foi exportada automaticamente pelo AgentK, gerando:
 | **Taxa de Detecção - Erros Semânticos** | 96,00% (48/50) | ✅ Muito Bom |
 | **Taxa de Implementação Bem-Sucedida** | 88,00% (44/50) | ✅ Bom |
 | **Tempo Médio de Resposta** | 0,95s | ✅ Excelente |
-| **Custo Médio por Teste** | US$ 2,50 | ✅ Acessível |
-| **Custo Total do Experimento** | US$ 125,00 | ✅ |
+| **Custo Total do Experimento** | US$ 1,63 | ✅ Muito Acessível |
+| **Custo Projetado por 100 Sessões** | US$ 2,50 | ✅ Acessível |
 
 ### 🎯 Conclusões
 
