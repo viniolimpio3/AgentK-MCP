@@ -1,6 +1,6 @@
 # 🛡️ AgentK - Especialista em Configurações YAML Kubernetes
 
-AgentK é um assistente inteligente especializado em **análise, otimização e gestão de configurações YAML do Kubernetes**. Utilizando GPT-4 e MCP (Model Context Protocol), oferece orientações baseadas em boas práticas para criação e manutenção de recursos Kubernetes de qualidade profissional.
+AgentK é um assistente inteligente especializado em **análise, otimização e gestão de configurações YAML do Kubernetes**. Utilizando GPT-4.1 e MCP (Model Context Protocol), oferece orientações baseadas em boas práticas para criação e manutenção de recursos Kubernetes de qualidade profissional.
 
 <p align="center">
   <img src="docs/AgentK-color.png" alt="AgentK" width="200" />
@@ -49,60 +49,29 @@ AgentK é um assistente inteligente especializado em **análise, otimização e 
 - **6 MCP Tools** para operações CRUD completas
 - **Configuração Externa** (`resource_config.yaml`)
 
-## Instalação
+## 🚀 Início Rápido
 
-### 🐳 Deploy com Docker (Recomendado)
+### Pré-requisitos
+- Docker e Docker Compose instalados
+- Acesso a um cluster Kubernetes (`kubectl` configurado)
+- Chave de API da OpenAI
+
+### Deploy Rápido
 
 ```bash
-# 1. Clone o repositório
+# 1. Clone e configure
 git clone https://github.com/viniolimpio3/AgentK-MCP.git
 cd AgentK-MCP
+cp .env.example .env  # Configure OPENAI_API_KEY e MCP_SERVER_URL
 
-# 2. Configure variáveis de ambiente (OBRIGATÓRIO)
-cp .env.example .env
-# Edite .env e configure: OPENAI_API_KEY e MCP_SERVER_URL
-
-# 3. Configure acesso ao Kubernetes:
-# Windows: Descomente no docker-compose.yml:
-# - ${USERPROFILE}/.kube/config:/app/.kube/config:ro
-
-# Linux/Mac: Descomente no docker-compose.yml:
-# - ${HOME}/.kube/config:/app/.kube/config:ro
-
-# 4. Execute
+# 2. Execute com Docker
 docker-compose up --build -d
 
-# 5. Acesse a aplicação
-# http://localhost:8501
+# 3. Acesse: http://localhost:8501
 ```
 
-### Deploy Automático
-
-O projeto possui **GitHub Actions** configurado para CI/CD:
-- **Deploy automático** a cada push na branch `master`
-- **Rollback manual** disponível via workflow
-- **Health checks** automáticos pós-deploy
-
-> **Pré-requisito**: Arquivo `.env` deve existir na VM de destino com as variáveis `OPENAI_API_KEY` e `MCP_SERVER_URL` configuradas.
-
-### Instalação Local
-
-```bash
-# 1. Clone e instale dependências
-git clone https://github.com/viniolimpio3/AgentK-MCP.git
-cd AgentK-MCP
-pip install -r client/requirements.txt
-pip install -r server/requirements.txt
-
-# 2. Configure variáveis de ambiente (OBRIGATÓRIO)
-cp .env.example .env
-# Edite .env e configure: OPENAI_API_KEY e MCP_SERVER_URL
-
-# 3. Execute a aplicação
-# Certifique-se que kubectl está configurado
-cd client
-streamlit run app/main.py
-```
+> 📖 **Para instalação detalhada, configuração de produção e CI/CD:**  
+> Consulte a [documentação completa de deploy](#-documentação-completa)
 
 ## Principais Diferenciais
 
@@ -117,13 +86,39 @@ streamlit run app/main.py
   <img src="docs/agent-k-arch.png" alt="AgentK" width="500" />
 </p>
 
-## Documentação Adicional
+## 📚 Documentação Completa
 
-- [Guia de Deploy](docs/DEPLOY.md)
-- [Exemplos de Uso](docs/tests/)
-- [Arquitetura do Sistema](docs/agent-k-arch.png)
+### 📖 Guias de Configuração e Deploy
+- **[Configuração do Ambiente na VM](docs/VM-environment-config.md)** - Setup completo do ambiente de produção
+- **[Pipeline CI/CD com GitHub Actions](docs/Pipeline-GithubActions-deployment-config.md)** - Deploy automático e rollback
+
+### 🧪 Testes e Validação
+- **[Procedimento de Testes do AgentK](docs/Procedimento-Testes-AgentK.md)** - Metodologia completa dos 50 testes realizados
+- **[Resumo das Misconfigurations](docs/Resumo-misconfigurations-tests.md)** - Detalhamento das misconfigurations intencionais
+- **[Arquivos de Teste YAML](docs/tests/)** - 10 arquivos com misconfigurations + 50 resultados exportados
+
+### 📊 Resultados e Métricas
+**Taxa de Detecção:**
+- ✅ Credenciais Expostas: **100%** (50/50)
+- ✅ Versão de Imagem: **100%** (50/50)
+- ✅ Erros Semânticos: **96%** (48/50)
+
+**Taxa de Implementação:** **88%** (44/50 testes bem-sucedidos)
+
+### 🎨 Recursos Visuais
+- **[Arquitetura do Sistema](docs/agent-k-arch.png)** - Diagrama da arquitetura MCP
+- **[Exemplos de YAML](docs/)** - `basic-example.yaml` e `orion-example.yaml`
+
+### 🔗 Links Rápidos
+| Documento | Descrição |
+|-----------|-----------|
+| [Procedimento de Testes](docs/Procedimento-Testes-AgentK.md) | Metodologia, resultados e análise dos 50 testes |
+| [Misconfigurations](docs/Resumo-misconfigurations-tests.md) | 29 misconfigurations em 10 arquivos de teste |
+| [Resultados dos Testes](docs/tests/results/) | 50 sessões exportadas com timestamps |
+| [VM Setup](docs/VM-environment-config.md) | Configuração do ambiente de produção |
+| [CI/CD Pipeline](docs/Pipeline-GithubActions-deployment-config.md) | Deploy automatizado com GitHub Actions |
 
 ---
 
-**Orientador:** Professor Dr. Fábio Henrique Cabrini
-**AgentK** - Seu especialista em configurações YAML Kubernetes
+**Orientador:** Professor Dr. Fábio Henrique Cabrini  
+**Instituição:** Faculdade Engenheiro Salvador Arena
