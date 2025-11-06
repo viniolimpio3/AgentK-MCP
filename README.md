@@ -1,9 +1,9 @@
-# 🛡️ AgentK - Especialista em Configurações YAML Kubernetes
+# AgentK - Especialista em Configurações YAML Kubernetes
 
 AgentK é um assistente inteligente especializado em **análise, otimização e gestão de configurações YAML do Kubernetes**. Utilizando GPT-4.1 e MCP (Model Context Protocol), oferece orientações baseadas em boas práticas para criação e manutenção de recursos Kubernetes de qualidade profissional.
 
 <p align="center">
-  <img src="docs/AgentK-color.png" alt="AgentK" width="200" />
+  <img src="docs/AgentK-white.png" alt="AgentK" width="150" />
 </p>
 
 ## Objetivo Principal
@@ -103,6 +103,11 @@ docker-compose up --build -d
 - ✅ Erros Semânticos: **96%** (48/50)
 
 **Taxa de Implementação:** **88%** (44/50 testes bem-sucedidos)
+
+**AgentK - Exemplo de uso** 
+<p align="center">
+  <img src="docs/images/AgentK-Frontend.jpeg" alt="AgentK" width="600" />
+</p>
 
 ### 🎨 Recursos Visuais
 - **[Arquitetura do Sistema](docs/agent-k-arch.png)** - Diagrama da arquitetura MCP
